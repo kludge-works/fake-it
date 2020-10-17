@@ -1,5 +1,6 @@
 {
   "main": "node_modules/@atomist/skill/lib/function.js",
+  "version": "0.0.1",
   "dependencies": {
     "@atomist/skill": "^0.3.1",
     "@atomist/slack-messages": "^1.2.0",
