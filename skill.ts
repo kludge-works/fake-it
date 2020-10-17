@@ -10,7 +10,7 @@ export const Skill = skill<{ schedule: any }>({
 	name: "fake-it-skill",
 	namespace: "kludge-works",
 	displayName: "Fake It",
-	author: "Atomist",
+	author: "kludge-works",
 	categories: [Category.DevOps],
 	license: "Apache-2.0",
 
