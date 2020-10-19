@@ -15,7 +15,7 @@
  */
 
 import { EventHandler } from "@atomist/skill";
-import { RemindOnScheduleSubscription } from "../lib/typings/types";
+import { RemindOnScheduleSubscription } from "../typings/types";
 
 export const handler: EventHandler<RemindOnScheduleSubscription> = async ctx => {
 	await ctx.audit.log(`Mike check ${new Date().toLocaleString()}`);
