@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill";
-import { RemindOnScheduleSubscription } from "../typings/types";
+import { EventHandler, subscription } from "@atomist/skill";
 
-export const handler: EventHandler<RemindOnScheduleSubscription> = async ctx => {
+export const handler: EventHandler<subscription.types.OnScheduleSubscription> = async ctx => {
 	await ctx.audit.log(`Mike Check ${new Date().toLocaleString()}`);
 };
