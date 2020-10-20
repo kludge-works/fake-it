@@ -33,4 +33,6 @@ export const Skill = skill<{ schedule: any }>({
 			visibility: ParameterVisibility.Normal,
 		},
 	},
+
+	subscriptions: ["@atomist/skill/onSchedule"],
 });
