@@ -35,4 +35,13 @@ export const Skill = skill<{ schedule: any }>({
 	},
 
 	subscriptions: ["@atomist/skill/onSchedule"],
+
+	commands: [
+		{
+			name: "guestSpeaker",
+			displayName: "The guest speaker",
+			description: "waffle waffle",
+			pattern: /^guest speaker.*$/,
+		},
+	],
 });
