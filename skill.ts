@@ -40,8 +40,14 @@ export const Skill = skill<{ schedule: any }>({
 		{
 			name: "guestSpeaker",
 			displayName: "The guest speaker",
-			description: "waffle waffle",
+			description: "Test responding to a command with a slack message",
 			pattern: /^guest speaker.*$/,
+		},
+		{
+			name: "runLongRunningTasks",
+			displayName: "Long running tasks",
+			description: "some long running tasks",
+			pattern: /^long tasks.*$/,
 		},
 	],
 });
