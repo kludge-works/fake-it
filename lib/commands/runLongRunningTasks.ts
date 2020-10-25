@@ -6,10 +6,11 @@ export const handler: CommandHandler = async ctx => {
 
 	return await runSteps({
 		context: ctx,
-		steps: [
-			sleep("long task 1", 35),
-			sleep("long task 2", 15),
-			sleep("long task 3", 5),
-		],
+		// steps: [
+		// 	sleep("long task 1", 35),
+		// 	sleep("long task 2", 15),
+		// 	sleep("long task 3", 5),
+		// ],
+		steps: sleep("long task 1", 35),
 	});
 };
