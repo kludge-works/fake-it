@@ -7,6 +7,8 @@ export function sleep(
 	return {
 		name: stepName,
 		run: async (ctx, params) => {
+			await ctx.audit.log(`stepname: ${stepName}`);
+			await ctx.audit.log(`sleepTime: ${sleepTime}`);
 			await new Promise(r => setTimeout(r, sleepTime));
 			return {
 				code: 0,
