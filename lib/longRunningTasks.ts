@@ -17,8 +17,8 @@ export function sleep(
 		name: stepName,
 		run: async (ctx, params) => {
 			await ctx.audit.log(`stepname: ${stepName}`);
-			await ctx.audit.log(`sleepTime: ${sleepTime}`);
-			await new Promise(r => setTimeout(r, sleepTime));
+			await ctx.audit.log(`sleepTime: ${sleepTime * 1000}`);
+			await new Promise(r => setTimeout(r, sleepTime * 1000));
 			return {
 				code: 0,
 				reason: "Success",
