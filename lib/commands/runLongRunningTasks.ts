@@ -1,16 +1,26 @@
 import { CommandHandler, runSteps } from "@atomist/skill";
-import { sleep, sleep2 } from "../longRunningTasks";
+import { slackUpdate, sleep, sleep2 } from "../longRunningTasks";
+import * as _ from "lodash";
 
 export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log("Checking long running tasks");
 
-	return await runSteps({
+	const steps = [sleep("long task 1", 180), sleep2];
+	const slackListener = await slackUpdate(
+		ctx as any,
+		steps,
+		"Long task Execution",
+		[_.get(ctx.trigger.source, "slack.channel.name")],
+	);
+
+	const result = await runSteps({
 		context: ctx,
-		// steps: [
-		// 	sleep("long task 1", 35),
-		// 	sleep("long task 2", 15),
-		// 	sleep("long task 3", 5),
-		// ],
-		steps: [sleep("long task 1", 35), sleep2],
+		steps,
+		listeners: [slackListener],
 	});
+
+	return {
+		code: result.code,
+		reason: result.code === 0 ? "Success" : result.reason,
+	};
 };
