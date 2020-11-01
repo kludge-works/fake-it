@@ -5,7 +5,6 @@ import {
 	resourceProvider,
 	skill,
 } from "@atomist/skill";
-// import { fakeConfiguration } from "./lib/fakeConfiguration";
 
 export const Skill = skill<{ schedule: any }>({
 	name: "fake-it-skill",
@@ -44,11 +43,5 @@ export const Skill = skill<{ schedule: any }>({
 			description: "Test responding to a command with a slack message",
 			pattern: /^guest speaker.*$/,
 		},
-		// {
-		// 	name: "runLongRunningTasks",
-		// 	displayName: "Long running tasks",
-		// 	description: "some long running tasks",
-		// 	pattern: /^long tasks.*$/,
-		// },
 	],
 });
