@@ -5,8 +5,9 @@ import {
 	resourceProvider,
 	skill,
 } from "@atomist/skill";
+import { fakeConfiguration } from "./lib/fakeConfiguration";
 
-export const Skill = skill<{ schedule: any }>({
+export const Skill = skill<fakeConfiguration & { schedule: any }>({
 	name: "fake-it-skill",
 	namespace: "kludge-works",
 	displayName: "Fake It",
