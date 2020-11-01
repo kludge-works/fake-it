@@ -44,11 +44,11 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			description: "Test responding to a command with a slack message",
 			pattern: /^guest speaker.*$/,
 		},
-		{
-			name: "runLongRunningTasks",
-			displayName: "Long running tasks",
-			description: "some long running tasks",
-			pattern: /^long tasks.*$/,
-		},
+		// {
+		// 	name: "runLongRunningTasks",
+		// 	displayName: "Long running tasks",
+		// 	description: "some long running tasks",
+		// 	pattern: /^long tasks.*$/,
+		// },
 	],
 });
