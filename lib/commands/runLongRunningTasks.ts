@@ -1,11 +1,11 @@
 import { CommandHandler, runSteps } from "@atomist/skill";
 import * as _ from "lodash";
-import { slackUpdate, sleep } from "../longRunningTasks";
+import { slackUpdate, sleep2 } from "../longRunningTasks";
 
 export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log("Checking long running tasks");
 
-	const steps = [sleep("long task 1", 180)];
+	const steps = [sleep2];
 	const slackListener = await slackUpdate(
 		ctx as any,
 		steps,

@@ -19,6 +19,7 @@ export function sleep(
 			await ctx.audit.log(`stepname: ${stepName}`);
 			await ctx.audit.log(`sleepTime: ${sleepTime * 1000}`);
 			await new Promise(r => setTimeout(r, sleepTime * 1000));
+			await ctx.audit.log("task completed");
 			return {
 				code: 0,
 				reason: "Success",
@@ -26,6 +27,18 @@ export function sleep(
 		},
 	};
 }
+
+export const sleep2: Step<CommandContext> = {
+	name: "sleep2",
+	run: async (ctx, params) => {
+		await new Promise(r => setTimeout(r, 60 * 1000));
+		await ctx.audit.log("sleep2 task completed");
+		return {
+			code: 0,
+			reason: "Success",
+		};
+	},
+};
 
 export async function slackUpdate<
 	C extends EventContext<OnPushSubscription, fakeConfiguration>
