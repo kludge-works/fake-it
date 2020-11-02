@@ -104,6 +104,7 @@ export async function slackUpdate<
 		): Promise<void> => {
 			finishedCount++;
 			if (result.visibility !== "hidden") {
+				await ctx.audit.log(JSON.stringify(result));
 				if (!!result && result.code !== 0) {
 					text += `Failed2: ${step.name}.\n\n${result.reason}\n`;
 					await updateSlackState(
