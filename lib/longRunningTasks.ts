@@ -82,7 +82,7 @@ export async function slackUpdate<
 		},
 		failed: async (step: Step<any>, error: Error): Promise<void> => {
 			finishedCount++;
-			text += `Failed: ${step.name}.\n${error.message}\n`;
+			text += `Failed1: ${step.name}.\n${error.message}\n`;
 			await updateSlackState(
 				title,
 				text,
@@ -101,7 +101,7 @@ export async function slackUpdate<
 			finishedCount++;
 			if (result.visibility !== "hidden") {
 				if (!!result && result.code !== 0) {
-					text += `Failed: ${step.name}.\n\n${result.reason}\n`;
+					text += `Failed2: ${step.name}.\n\n${result.reason}\n`;
 					await updateSlackState(
 						title,
 						text,
