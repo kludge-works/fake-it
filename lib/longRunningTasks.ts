@@ -34,7 +34,7 @@ export const sleep2: Step<CommandContext> = {
 		await new Promise(r => setTimeout(r, 60 * 1000));
 		await ctx.audit.log("sleep2 task completed");
 		return {
-			code: 0,
+			code: 1,
 			reason: "Success",
 		};
 	},
