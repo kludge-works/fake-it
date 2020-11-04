@@ -33,6 +33,7 @@ export const sleep2: Step<CommandContext> = {
 		await ctx.audit.log("sleep2 task completed");
 		return {
 			code: 0,
+			reason: "Success",
 		};
 	},
 };
