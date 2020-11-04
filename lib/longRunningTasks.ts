@@ -29,7 +29,7 @@ export function sleep1(
 export const sleep2: Step<CommandContext> = {
 	name: "sleep2",
 	run: async (ctx, params) => {
-		await sleep(20);
+		await sleep(10);
 		await ctx.audit.log("sleep2 task completed");
 		return {
 			code: 0,
@@ -46,7 +46,10 @@ function sleep(n) {
 	msleep(n * 1000);
 }
 
-export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
+export async function slackUpdate<
+	C extends CommandContext<fakeConfiguration>,
+	G extends fakeConfiguration = any
+>(
 	ctx: C,
 	steps: Array<Step<any>>,
 	title: string,
@@ -58,7 +61,7 @@ export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 	let finishedCount = 0;
 
 	return {
-		starting: async (step: Step<any>): Promise<void> => {
+		starting: async (step: Step<any>, params: G): Promise<void> => {
 			await updateSlackState(
 				title,
 				text,
@@ -70,7 +73,7 @@ export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 				fullRender,
 			);
 		},
-		skipped: async (step: Step<any>): Promise<void> => {
+		skipped: async (step: Step<any>, params: G): Promise<void> => {
 			text += `Skipped: ${step.name}.\n`;
 			finishedCount++;
 			await updateSlackState(
@@ -84,7 +87,11 @@ export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 				fullRender,
 			);
 		},
-		failed: async (step: Step<any>, error: Error): Promise<void> => {
+		failed: async (
+			step: Step<any>,
+			params: G,
+			error: Error,
+		): Promise<void> => {
 			finishedCount++;
 			text += `Failed1: ${step.name}.\n${error.message}\n`;
 			await updateSlackState(
@@ -100,6 +107,7 @@ export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 		},
 		completed: async (
 			step: Step<any>,
+			params: G,
 			result: undefined | HandlerStatus,
 		): Promise<void> => {
 			finishedCount++;
