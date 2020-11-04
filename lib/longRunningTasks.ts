@@ -7,7 +7,7 @@ import {
 } from "@atomist/skill";
 import { fakeConfiguration } from "./fakeConfiguration";
 
-export function sleep(
+export function sleep1(
 	stepName: string,
 	sleepTime: number,
 ): Step<CommandContext> {
@@ -29,7 +29,7 @@ export function sleep(
 export const sleep2: Step<CommandContext> = {
 	name: "sleep2",
 	run: async (ctx, params) => {
-		await new Promise(resolve => setTimeout(resolve, 20000));
+		await sleep(20);
 		await ctx.audit.log("sleep2 task completed");
 		return {
 			code: 0,
@@ -37,6 +37,14 @@ export const sleep2: Step<CommandContext> = {
 		};
 	},
 };
+
+function msleep(n) {
+	Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n);
+}
+
+function sleep(n) {
+	msleep(n * 1000);
+}
 
 export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 	ctx: C,
