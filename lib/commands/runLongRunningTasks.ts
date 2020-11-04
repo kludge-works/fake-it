@@ -4,6 +4,7 @@ import { slackUpdate, sleep2 } from "../longRunningTasks";
 
 export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log("Checking long running tasks");
+	await ctx.audit.log(JSON.stringify(ctx));
 
 	const steps = [sleep2];
 	const slackListener = await slackUpdate(
