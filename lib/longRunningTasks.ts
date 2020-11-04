@@ -1,13 +1,11 @@
 import {
 	CommandContext,
-	EventContext,
 	HandlerStatus,
 	slack,
 	Step,
 	StepListener,
 } from "@atomist/skill";
 import { fakeConfiguration } from "./fakeConfiguration";
-import { OnPushSubscription } from "@atomist/skill/lib/definition/subscription/typings/types";
 
 export function sleep(
 	stepName: string,
@@ -44,9 +42,7 @@ export const sleep2: Step<CommandContext> = {
 	},
 };
 
-export async function slackUpdate<
-	C extends EventContext<OnPushSubscription, fakeConfiguration>
->(
+export async function slackUpdate<C extends CommandContext<fakeConfiguration>>(
 	ctx: C,
 	steps: Array<Step<any>>,
 	title: string,
@@ -151,7 +147,7 @@ export async function slackUpdate<
 export async function updateSlackState(
 	title: string,
 	text: string,
-	ctx: EventContext<OnPushSubscription>,
+	ctx: CommandContext<fakeConfiguration>,
 	stepCount: number,
 	currentStep: number,
 	state: SkillStepState,
