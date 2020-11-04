@@ -29,15 +29,10 @@ export function sleep(
 export const sleep2: Step<CommandContext> = {
 	name: "sleep2",
 	run: async (ctx, params) => {
-		try {
-			await new Promise(resolve => setTimeout(resolve, 20000));
-			await ctx.audit.log("sleep2 task completed");
-		} catch (e) {
-			await ctx.audit.log(e);
-		}
+		await new Promise(resolve => setTimeout(resolve, 20000));
+		await ctx.audit.log("sleep2 task completed");
 		return {
 			code: 0,
-			reason: "Success",
 		};
 	},
 };
