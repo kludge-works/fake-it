@@ -1,3 +1,3 @@
 export interface fakeConfiguration {
-	someProperty: "someday we will have a value";
+	someProperty?: string;
 }

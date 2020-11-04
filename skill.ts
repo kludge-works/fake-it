@@ -33,6 +33,14 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			required: false,
 			visibility: ParameterVisibility.Normal,
 		},
+		someProperty: {
+			type: ParameterType.String,
+			displayName: "Some property",
+			description: "Some property",
+			placeHolder: "Some value",
+			required: false,
+			visibility: ParameterVisibility.Hidden,
+		},
 	},
 
 	subscriptions: ["@atomist/skill/onSchedule"],
