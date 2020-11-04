@@ -1,2 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface fakeConfiguration {}
+export interface fakeConfiguration {
+	someProperty: "someday we will have a value";
+}
