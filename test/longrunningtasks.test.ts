@@ -62,8 +62,7 @@ describe("event", function () {
 			secrets: [
 				{
 					uri: "atomist://api-key",
-					value:
-						"<atomist.api.key>",
+					value: "atomist.api.key",
 				},
 			],
 			configurations: [
