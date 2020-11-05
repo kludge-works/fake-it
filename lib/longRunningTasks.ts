@@ -7,7 +7,7 @@ import {
 } from "@atomist/skill";
 import { fakeConfiguration } from "./fakeConfiguration";
 
-export function sleep1(
+export function sleepyTask(
 	stepName: string,
 	sleepTime: number,
 ): Step<CommandContext> {
@@ -15,8 +15,8 @@ export function sleep1(
 		name: stepName,
 		run: async (ctx, params) => {
 			await ctx.audit.log(`stepname: ${stepName}`);
-			await ctx.audit.log(`sleepTime: ${sleepTime * 1000}`);
-			await new Promise(r => setTimeout(r, sleepTime * 1000));
+			await ctx.audit.log(`sleepTime: ${sleepTime}s`);
+			await sleep(sleepTime);
 			await ctx.audit.log("task completed");
 			return {
 				code: 0,
@@ -25,18 +25,6 @@ export function sleep1(
 		},
 	};
 }
-
-export const sleep2: Step<CommandContext> = {
-	name: "sleep2",
-	run: async (ctx, params) => {
-		await sleep(10);
-		await ctx.audit.log("sleep2 task completed");
-		return {
-			code: 0,
-			reason: "Success",
-		};
-	},
-};
 
 function msleep(n) {
 	Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n);
