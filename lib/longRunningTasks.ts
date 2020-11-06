@@ -41,7 +41,8 @@ export async function slackUpdate<
 	ctx: C,
 	steps: Array<Step<any>>,
 	title: string,
-	channels?: string[],
+	channels: string[],
+	msgId: string,
 ): Promise<StepListener<any>> {
 	let text = "";
 	let fullRender = "";
@@ -58,6 +59,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.InProcess,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -72,6 +74,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.Skipped,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -90,6 +93,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.Failure,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -111,6 +115,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Failure,
 						channels,
+						msgId,
 						fullRender,
 					);
 				} else if (!!result && result.reason) {
@@ -124,6 +129,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Success,
 						channels,
+						msgId,
 						fullRender,
 					);
 				} else {
@@ -136,6 +142,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Success,
 						channels,
+						msgId,
 						fullRender,
 					);
 				}
@@ -152,6 +159,7 @@ export async function updateSlackState(
 	currentStep: number,
 	state: SkillStepState,
 	channels: string[],
+	msgId: string,
 	fullRender: string,
 ): Promise<void> {
 	const notify = {
@@ -159,10 +167,6 @@ export async function updateSlackState(
 		value: channels,
 	};
 
-	// TODO: Gotta be a better way here.   Need to test if this context is from a push or from a command handler
-	const msgId = Object.keys(ctx).includes("data")
-		? ctx.correlationId
-		: (ctx as any).msgId;
 	await ctx.message.send(
 		buildMessage(
 			title,
