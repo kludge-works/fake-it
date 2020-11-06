@@ -14,10 +14,7 @@ export function sleepyTask(
 	return {
 		name: stepName,
 		run: async (ctx, params) => {
-			await ctx.audit.log(`stepname: ${stepName}`);
-			await ctx.audit.log(`sleepTime: ${sleepTime}s`);
 			await sleep(sleepTime);
-			await ctx.audit.log("task completed");
 			return {
 				code: 0,
 				reason: "Success",
@@ -41,7 +38,8 @@ export async function slackUpdate<
 	ctx: C,
 	steps: Array<Step<any>>,
 	title: string,
-	channels?: string[],
+	channels: string[],
+	msgId: string,
 ): Promise<StepListener<any>> {
 	let text = "";
 	let fullRender = "";
@@ -58,6 +56,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.InProcess,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -72,6 +71,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.Skipped,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -81,7 +81,7 @@ export async function slackUpdate<
 			error: Error,
 		): Promise<void> => {
 			finishedCount++;
-			text += `Failed1: ${step.name}.\n${error.message}\n`;
+			text += `Failed: ${step.name}.\n${error.message}\n`;
 			await updateSlackState(
 				title,
 				text,
@@ -90,6 +90,7 @@ export async function slackUpdate<
 				finishedCount,
 				SkillStepState.Failure,
 				channels,
+				msgId,
 				fullRender,
 			);
 		},
@@ -102,7 +103,7 @@ export async function slackUpdate<
 			if (result.visibility !== "hidden") {
 				await ctx.audit.log(JSON.stringify(result));
 				if (!!result && result.code !== 0) {
-					text += `Failed2: ${step.name}.\n\n${result.reason}\n`;
+					text += `Failed: ${step.name}.\n\n${result.reason}\n`;
 					await updateSlackState(
 						title,
 						text,
@@ -111,6 +112,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Failure,
 						channels,
+						msgId,
 						fullRender,
 					);
 				} else if (!!result && result.reason) {
@@ -124,6 +126,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Success,
 						channels,
+						msgId,
 						fullRender,
 					);
 				} else {
@@ -136,6 +139,7 @@ export async function slackUpdate<
 						finishedCount,
 						SkillStepState.Success,
 						channels,
+						msgId,
 						fullRender,
 					);
 				}
@@ -152,6 +156,7 @@ export async function updateSlackState(
 	currentStep: number,
 	state: SkillStepState,
 	channels: string[],
+	msgId: string,
 	fullRender: string,
 ): Promise<void> {
 	const notify = {
@@ -159,10 +164,6 @@ export async function updateSlackState(
 		value: channels,
 	};
 
-	// TODO: Gotta be a better way here.   Need to test if this context is from a push or from a command handler
-	const msgId = Object.keys(ctx).includes("data")
-		? ctx.correlationId
-		: (ctx as any).msgId;
 	await ctx.message.send(
 		buildMessage(
 			title,

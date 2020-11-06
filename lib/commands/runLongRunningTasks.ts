@@ -11,6 +11,7 @@ export const handler: CommandHandler = async ctx => {
 		steps,
 		"Long task Execution",
 		[_.get(ctx.trigger.source, "slack.channel.name")],
+		_.get(ctx.trigger.source, "slack.message.id"),
 	);
 
 	const result = await runSteps({

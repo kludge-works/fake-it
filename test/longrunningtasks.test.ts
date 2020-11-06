@@ -3,7 +3,7 @@ import { createContext } from "@atomist/skill/lib/context";
 import * as assert from "power-assert";
 import { handler } from "../lib/commands/runLongRunningTasks";
 
-describe("event", function () {
+describe.skip("event", function () {
 	this.timeout(20000);
 	it("run skill", async () => {
 		const payload = {
@@ -39,8 +39,7 @@ describe("event", function () {
 									typeName: "ChatProvider",
 									selectedResourceProviders: [
 										{
-											id:
-												"selected-resource-provider-id",
+											id: "selected-resource-provider-id",
 										},
 									],
 								},
@@ -117,8 +116,7 @@ describe("event", function () {
 				},
 			},
 			atomist_type: "command_handler_request",
-			correlation_id:
-				"correlation.id",
+			correlation_id: "correlation.id",
 			team: {
 				id: "fake-it",
 				name: "kludge-works",

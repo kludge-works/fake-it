@@ -58,5 +58,11 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			description: "some long running tasks",
 			pattern: /^long tasks.*$/,
 		},
+		{
+			name: "progress",
+			displayName: "Understand progress",
+			description: "Understand progress",
+			pattern: /^progress.*$/,
+		},
 	],
 });
