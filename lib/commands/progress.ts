@@ -1,4 +1,4 @@
-import { CommandHandler, slack } from "@atomist/skill";
+import { CommandHandler, MessageOptions, slack } from "@atomist/skill";
 import * as _ from "lodash";
 import { ContextBlock, HeaderBlock } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
@@ -7,12 +7,18 @@ import { sleep } from "../longRunningTasks";
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
 	const rawMessage = _.get(ctx.trigger, "raw_message");
+	const parentMsg = _.get(ctx.trigger.source, "slack.message.id");
 
 	const msgId = ts();
+	const msgOptions = { id: msgId.toString(), ts: msgId } as MessageOptions;
+	if (rawMessage.includes("thread")) {
+		msgOptions.thread = parentMsg;
+	}
+
 	await ctx.message.send(
 		listOfTasks("first header"),
 		{ users: [], channels: channel },
-		{ id: msgId.toString(), ts: msgId },
+		msgOptions,
 	);
 
 	await sleep(10);
@@ -23,7 +29,7 @@ export const handler: CommandHandler = async ctx => {
 		{
 			id: msgId.toString(),
 			ts: msgId,
-			thread: rawMessage.includes("thread"),
+			msgOptions,
 		},
 	);
 
