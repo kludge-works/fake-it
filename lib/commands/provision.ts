@@ -1,6 +1,10 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { HeaderBlock, SectionBlock } from "@atomist/slack-messages";
+import {
+	ActionsBlock,
+	HeaderBlock,
+	SectionBlock,
+} from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 
 export const handler: CommandHandler = async ctx => {
@@ -125,6 +129,24 @@ function buildMessage(): slack.SlackMessage {
 					action_id: "datepicker-action",
 				},
 			} as SectionBlock,
+			{
+				type: "divider",
+			},
+			{
+				type: "actions",
+				elements: [
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "Click Me",
+							emoji: true,
+						},
+						value: "click_me_123",
+						action_id: "actionId-0",
+					},
+				],
+			} as ActionsBlock,
 		],
 	};
 }
