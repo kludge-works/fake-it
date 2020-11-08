@@ -33,21 +33,6 @@ function buildMessage(): slack.SlackMessage {
 			{
 				type: "divider",
 			},
-			{
-				type: "input",
-				label: {
-					type: "plain_text",
-					text: "Name",
-				},
-				element: {
-					type: "plain_text_input",
-					action_id: "plain_input",
-					placeholder: {
-						type: "plain_text",
-						text: "environment name",
-					},
-				},
-			} as InputBlock,
 		],
 	};
 }

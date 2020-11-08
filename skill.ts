@@ -67,7 +67,7 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 		{
 			name: "provision",
 			displayName: "provision env",
-			description: "v",
+			description: "provision env",
 			pattern: /^provision.*$/,
 		},
 	],
