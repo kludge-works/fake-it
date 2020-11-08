@@ -91,6 +91,40 @@ function buildMessage(): slack.SlackMessage {
 					action_id: "static_select-action",
 				},
 			} as SectionBlock,
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: "Date machines available",
+				},
+				accessory: {
+					type: "datepicker",
+					initial_date: "1990-04-28",
+					placeholder: {
+						type: "plain_text",
+						text: "Select a date",
+						emoji: true,
+					},
+					action_id: "datepicker-action",
+				},
+			} as SectionBlock,
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: "Date machines discarded	",
+				},
+				accessory: {
+					type: "datepicker",
+					initial_date: "1990-04-28",
+					placeholder: {
+						type: "plain_text",
+						text: "Select a date",
+						emoji: true,
+					},
+					action_id: "datepicker-action",
+				},
+			} as SectionBlock,
 		],
 	};
 }
