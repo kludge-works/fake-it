@@ -6,7 +6,7 @@ import { sleep } from "../longRunningTasks";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
-	// const msgId = _.get(ctx.trigger.source, "slack.message.id");
+	const rawMessage = _.get(ctx.trigger, "raw_message");
 
 	const msgId = ts();
 	await ctx.message.send(
@@ -20,7 +20,11 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.message.send(
 		listOfTasks("updated header"),
 		{ users: [], channels: channel },
-		{ id: msgId.toString(), ts: msgId },
+		{
+			id: msgId.toString(),
+			ts: msgId,
+			thread: rawMessage.includes("thread"),
+		},
 	);
 
 	return {
