@@ -16,16 +16,59 @@ export const handler: CommandHandler = async ctx => {
 	}
 
 	await ctx.message.send(
-		listOfTasks("first header"),
+		listOfTasks(
+			"new version check",
+			":arrow_forward: Checking hub.docker.com for new versions \n" +
+				":black_circle_for_record: Updating quay.io with new versions of nginx and Ubuntu\n" +
+				":black_circle_for_record: Updating repositories",
+		),
 		{ users: [], channels: channel },
 		msgOptions,
 	);
 
 	await sleep(10);
 
-	delete msgOptions.thread;
 	await ctx.message.send(
-		listOfTasks("updated header"),
+		listOfTasks(
+			"update quay.io",
+			":white_check_mark: Checking hub.docker.com for new versions \n" +
+				":arrow_forward: Updating quay.io with new versions of nginx and Ubuntu\n" +
+				":black_circle_for_record: Updating repositories",
+		),
+		{ users: [], channels: channel },
+		{
+			id: msgId.toString(),
+			ts: msgId,
+			msgOptions,
+		},
+	);
+
+	await sleep(10);
+
+	await ctx.message.send(
+		listOfTasks(
+			"update repositories",
+			":white_check_mark: Checking hub.docker.com for new versions \n" +
+				":white_check_mark: Updating quay.io with new versions of nginx and Ubuntu\n" +
+				":arrow_forward: Updating repositories",
+		),
+		{ users: [], channels: channel },
+		{
+			id: msgId.toString(),
+			ts: msgId,
+			msgOptions,
+		},
+	);
+
+	await sleep(10);
+
+	await ctx.message.send(
+		listOfTasks(
+			"Tasks completed",
+			":white_check_mark: Checking hub.docker.com for new versions \n" +
+				":white_check_mark: Updating quay.io with new versions of nginx and Ubuntu\n" +
+				":white_check_mark: Updating repositories",
+		),
 		{ users: [], channels: channel },
 		{
 			id: msgId.toString(),
@@ -40,7 +83,7 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function listOfTasks(header: string): slack.SlackMessage {
+function listOfTasks(header: string, content: string): slack.SlackMessage {
 	return {
 		blocks: [
 			{
@@ -48,7 +91,6 @@ function listOfTasks(header: string): slack.SlackMessage {
 				text: {
 					type: "plain_text",
 					text: header,
-					emoji: true,
 				},
 			} as HeaderBlock,
 			{
@@ -59,9 +101,7 @@ function listOfTasks(header: string): slack.SlackMessage {
 				elements: [
 					{
 						type: "plain_text",
-						text:
-							":black_circle_for_record: planned task \n:arrow_forward: task in progress \n:white_check_mark: task completed \n:x: task failed",
-						emoji: true,
+						text: content,
 					},
 				],
 			} as ContextBlock,
