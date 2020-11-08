@@ -1,6 +1,6 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { HeaderBlock, InputBlock } from "@atomist/slack-messages";
+import { HeaderBlock } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 
 export const handler: CommandHandler = async ctx => {
