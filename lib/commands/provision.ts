@@ -49,6 +49,48 @@ function buildMessage(): slack.SlackMessage {
 					action_id: "users_select-action",
 				},
 			} as SectionBlock,
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: "Number of machines",
+				},
+				accessory: {
+					type: "static_select",
+					placeholder: {
+						type: "plain_text",
+						text: "Select an item",
+						emoji: true,
+					},
+					options: [
+						{
+							text: {
+								type: "plain_text",
+								text: "1",
+								emoji: true,
+							},
+							value: "1",
+						},
+						{
+							text: {
+								type: "plain_text",
+								text: "2",
+								emoji: true,
+							},
+							value: "2",
+						},
+						{
+							text: {
+								type: "plain_text",
+								text: "3",
+								emoji: true,
+							},
+							value: "3",
+						},
+					],
+					action_id: "static_select-action",
+				},
+			} as SectionBlock,
 		],
 	};
 }
