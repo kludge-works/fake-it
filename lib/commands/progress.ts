@@ -1,15 +1,26 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { ContextBlock } from "@atomist/slack-messages";
+import { ContextBlock, HeaderBlock } from "@atomist/slack-messages";
+import { ts } from "@atomist/skill/lib/slack";
+import { sleep } from "../longRunningTasks";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
-	const msgId = _.get(ctx.trigger.source, "slack.message.id");
+	// const msgId = _.get(ctx.trigger.source, "slack.message.id");
+
+	const msgId = ts();
+	await ctx.message.send(
+		listOfTasks("first header"),
+		{ users: [], channels: channel },
+		{ id: msgId.toString(), ts: msgId },
+	);
+
+	await sleep(10);
 
 	await ctx.message.send(
-		listOfTasks(),
+		listOfTasks("updated header"),
 		{ users: [], channels: channel },
-		{ id: msgId },
+		{ id: msgId.toString(), ts: msgId },
 	);
 
 	return {
@@ -18,9 +29,20 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function listOfTasks(): slack.SlackMessage {
+function listOfTasks(header: string): slack.SlackMessage {
 	return {
 		blocks: [
+			{
+				type: "header",
+				text: {
+					type: "plain_text",
+					text: header,
+					emoji: true,
+				},
+			} as HeaderBlock,
+			{
+				type: "divider",
+			},
 			{
 				type: "context",
 				elements: [
