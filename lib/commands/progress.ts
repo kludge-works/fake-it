@@ -1,69 +1,15 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { sleep } from "../longRunningTasks";
+import { ContextBlock } from "@atomist/slack-messages";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
 	const msgId = _.get(ctx.trigger.source, "slack.message.id");
 
 	await ctx.message.send(
-		slack.progressMessage(
-			"A progress message",
-			"Some progress",
-			{
-				state: "requested",
-				total: 1,
-				count: 1,
-			},
-			ctx,
-		),
-		{ channels: channel, users: [] },
-		{ msgId },
-	);
-	await sleep(10);
-	await ctx.message.send(
-		slack.progressMessage(
-			"A progress message",
-			"approved",
-			{
-				state: "approved",
-				total: 1,
-				count: 1,
-			},
-			ctx,
-		),
-		{ channels: channel, users: [] },
-		{ msgId },
-	);
-	await sleep(10);
-	await ctx.message.send(
-		slack.progressMessage(
-			"A progress message",
-			"n process",
-			{
-				state: "in_process",
-				total: 1,
-				count: 1,
-			},
-			ctx,
-		),
-		{ channels: channel, users: [] },
-		{ msgId },
-	);
-	await sleep(10);
-	await ctx.message.send(
-		slack.progressMessage(
-			"A progress message",
-			"n process",
-			{
-				state: "success",
-				total: 1,
-				count: 1,
-			},
-			ctx,
-		),
-		{ channels: channel, users: [] },
-		{ msgId },
+		listOfTasks(),
+		{ users: [], channels: channel },
+		{ id: msgId },
 	);
 
 	return {
@@ -71,3 +17,21 @@ export const handler: CommandHandler = async ctx => {
 		reason: "Success",
 	};
 };
+
+function listOfTasks(): slack.SlackMessage {
+	return {
+		blocks: [
+			{
+				type: "context",
+				elements: [
+					{
+						type: "plain_text",
+						text:
+							":black_circle_for_record: planned task \n:arrow_forward: task in progress \n:white_check_mark: task completed \n:x: task failed",
+						emoji: true,
+					},
+				],
+			} as ContextBlock,
+		],
+	};
+}
