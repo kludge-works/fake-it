@@ -23,6 +23,7 @@ export const handler: CommandHandler = async ctx => {
 
 	await sleep(10);
 
+	delete msgOptions.thread;
 	await ctx.message.send(
 		listOfTasks("updated header"),
 		{ users: [], channels: channel },
