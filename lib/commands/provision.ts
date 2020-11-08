@@ -144,6 +144,7 @@ function buildMessage(): slack.SlackMessage {
 						},
 						value: "click_me_123",
 						action_id: "actionId-0",
+						style: "primary",
 					},
 				],
 			} as ActionsBlock,
