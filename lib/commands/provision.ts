@@ -9,6 +9,7 @@ import { ts } from "@atomist/skill/lib/slack";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
+	await ctx.audit.log(JSON.stringify(ctx));
 
 	const msgId = ts();
 
