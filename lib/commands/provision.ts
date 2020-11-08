@@ -1,6 +1,6 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { HeaderBlock } from "@atomist/slack-messages";
+import { HeaderBlock, SectionBlock } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 
 export const handler: CommandHandler = async ctx => {
@@ -33,6 +33,22 @@ function buildMessage(): slack.SlackMessage {
 			{
 				type: "divider",
 			},
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: "People Responsible",
+				},
+				accessory: {
+					type: "multi_users_select",
+					placeholder: {
+						type: "plain_text",
+						text: "Select a user",
+						emoji: true,
+					},
+					action_id: "users_select-action",
+				},
+			} as SectionBlock,
 		],
 	};
 }
