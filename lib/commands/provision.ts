@@ -5,19 +5,13 @@ import { ts } from "@atomist/skill/lib/slack";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
-	const rawMessage = _.get(ctx.trigger, "raw_message");
-	const parentMsg = _.get(ctx.trigger.source, "slack.message.id");
 
 	const msgId = ts();
-	const msgOptions = { id: msgId.toString(), ts: msgId } as MessageOptions;
-	if (rawMessage.includes("thread")) {
-		msgOptions.thread = parentMsg;
-	}
 
 	await ctx.message.send(
 		buildMessage(),
 		{ users: [], channels: channel },
-		msgOptions,
+		{ id: msgId.toString(), ts: msgId },
 	);
 
 	return {
