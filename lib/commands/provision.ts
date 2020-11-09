@@ -10,11 +10,11 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(JSON.stringify(ctx));
 
 	// const msgId = ts();
-
-	await ctx.parameters.prompt<ProvisionAction>({
+	const response = await ctx.parameters.prompt<ProvisionAction>({
 		environmentName: {},
 		users: {},
 	});
+	await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
 	// 	.send(
 	// 		buildMessage(),
