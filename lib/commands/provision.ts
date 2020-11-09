@@ -13,11 +13,17 @@ export const handler: CommandHandler = async ctx => {
 
 	const msgId = ts();
 
-	await ctx.message.send(
-		buildMessage(),
-		{ users: [], channels: channel },
-		{ id: msgId.toString(), ts: msgId },
-	);
+	await ctx.message
+		.send(
+			buildMessage(),
+			{ users: [], channels: channel },
+			{ id: msgId.toString(), ts: msgId },
+		)
+		.then(async response => {
+			await ctx.audit.log("response");
+			await ctx.audit.log(JSON.stringify(response));
+		});
+	await ctx.audit.log("after send");
 
 	return {
 		code: 0,
