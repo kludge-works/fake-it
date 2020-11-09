@@ -1,8 +1,11 @@
 import { CommandHandler } from "@atomist/skill";
+import { ParameterObjectValue } from "@atomist/skill/lib/prompt";
 
 interface ProvisionAction {
 	users: string;
 	environmentName: string;
+	action: "ignore" | "delete";
+	numberMachines: number;
 }
 
 export const handler: CommandHandler = async ctx => {
@@ -11,8 +14,10 @@ export const handler: CommandHandler = async ctx => {
 
 	// const msgId = ts();
 	const response = await ctx.parameters.prompt<ProvisionAction>({
-		environmentName: {},
-		users: {},
+		environmentName: { displayName: "environment Name" },
+		users: { defaultValue: "boris" } as ParameterObjectValue,
+		action: {},
+		numberMachines: { displayName: "Number of Machines" },
 	});
 	await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
