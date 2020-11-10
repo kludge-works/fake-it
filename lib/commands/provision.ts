@@ -15,9 +15,9 @@ export const handler: CommandHandler = async ctx => {
 	// const msgId = ts();
 	const response = await ctx.parameters.prompt<ProvisionAction>({
 		environmentName: { displayName: "environment Name" },
-		users: { defaultValue: "boris" } as ParameterObjectValue,
+		users: { defaultValue: "boris" },
 		action: {},
-		numberMachines: { displayName: "Number of Machines" },
+		numberMachines: { description: "Number of Machines", type: "number" },
 	});
 	await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
