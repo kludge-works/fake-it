@@ -1,5 +1,6 @@
 import { CommandHandler } from "@atomist/skill";
 import { ParameterObjectValue } from "@atomist/skill/lib/prompt";
+import { ParameterPromptStyle } from "@atomist/skill/src/lib/prompt/prompt";
 
 interface ProvisionAction {
 	users: string;
@@ -13,14 +14,20 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(JSON.stringify(ctx));
 
 	// const msgId = ts();
-	const response = await ctx.parameters.prompt<ProvisionAction>({
-		environmentName: {
-			displayName: "environment Name",
-		} as ParameterObjectValue,
-		users: { defaultValue: "boris" },
-		action: {},
-		numberMachines: { description: "Number of Machines", type: "number" },
-	});
+	const response = await ctx.parameters.prompt<ProvisionAction>(
+		{
+			environmentName: {
+				displayName: "environment Name",
+			} as ParameterObjectValue,
+			users: { defaultValue: "boris" },
+			action: {},
+			numberMachines: {
+				description: "Number of Machines",
+				type: "number",
+			},
+		},
+		{ parameterStyle: ParameterPromptStyle.Dialog },
+	);
 	await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
 	// 	.send(
