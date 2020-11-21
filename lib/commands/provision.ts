@@ -1,5 +1,5 @@
 import { CommandHandler, slack } from "@atomist/skill";
-import { ActionsBlock, SectionBlock } from "@atomist/slack-messages";
+import { SectionBlock } from "@atomist/slack-messages";
 import { CommandIncoming } from "@atomist/skill/lib/payload";
 import { AtomistContinuationMimeType } from "@atomist/skill/lib/prompt/prompt";
 import _ = require("lodash");
@@ -22,7 +22,8 @@ export const handler: CommandHandler = async ctx => {
 	// 	ts: msgId,
 	// });
 
-	const baseMsg = buildButtonMessage();
+	// const baseMsg = buildButtonMessage();
+	const baseMsg = buildSimpleTextMessage();
 	const msg = buildResponse(baseMsg, ctx.trigger, channel);
 	await ctx.audit.log(JSON.stringify(msg));
 	const response = await ctx.message.send(msg, {
@@ -267,52 +268,67 @@ export const handler: CommandHandler = async ctx => {
 // 	};
 // }
 
-function buildButtonMessage(): slack.SlackMessage {
+function buildSimpleTextMessage(): slack.SlackMessage {
 	return {
 		blocks: [
 			{
 				type: "section",
 				text: {
-					type: "mrkdwn",
-					text: "This is a section block with a button.",
-				},
-				accessory: {
-					type: "button",
-					text: {
-						type: "plain_text",
-						text: "Click Me",
-					},
-					value: "click_me_123",
-					action_id: "button",
+					type: "plain_text",
+					text: "This is a plain text section block.",
+					emoji: true,
 				},
 			} as SectionBlock,
-			{
-				type: "actions",
-				block_id: "actionblock789",
-				elements: [
-					{
-						type: "button",
-						text: {
-							type: "plain_text",
-							text: "Primary Button",
-						},
-						style: "primary",
-						value: "click_me_456",
-					},
-					{
-						type: "button",
-						text: {
-							type: "plain_text",
-							text: "Link Button",
-						},
-						style: "danger",
-						value: "no_click_me_123",
-					},
-				],
-			} as ActionsBlock,
 		],
 	};
 }
+
+// const buildButtonMessage = (): slack.SlackMessage => {
+// 	return {
+// 		blocks: [
+// 			{
+// 				type: "section",
+// 				text: {
+// 					type: "mrkdwn",
+// 					text: "This is a section block with a button.",
+// 				},
+// 				accessory: {
+// 					type: "button",
+// 					text: {
+// 						type: "plain_text",
+// 						text: "Click Me",
+// 					},
+// 					value: "click_me_123",
+// 					action_id: "button",
+// 				},
+// 			} as SectionBlock,
+// 			{
+// 				type: "actions",
+// 				block_id: "actionblock789",
+// 				elements: [
+// 					{
+// 						type: "button",
+// 						text: {
+// 							type: "plain_text",
+// 							text: "Primary Button",
+// 						},
+// 						style: "primary",
+// 						value: "click_me_456",
+// 					},
+// 					{
+// 						type: "button",
+// 						text: {
+// 							type: "plain_text",
+// 							text: "Link Button",
+// 						},
+// 						style: "danger",
+// 						value: "no_click_me_123",
+// 					},
+// 				],
+// 			} as ActionsBlock,
+// 		],
+// 	};
+// };
 
 function buildResponse(
 	baseMsg: slack.SlackMessage,
