@@ -2,6 +2,9 @@ import { CommandHandler } from "@atomist/skill";
 import { slack } from "@atomist/skill";
 import { ActionsBlock, SectionBlock } from "@atomist/slack-messages";
 import _ = require("lodash");
+import { HandlerResponse, Parameter } from "@atomist/skill/lib/message";
+import { Arg, CommandIncoming } from "@atomist/skill/lib/payload";
+import { AtomistContinuationMimeType } from "@atomist/skill/lib/prompt/prompt";
 
 // interface ProvisionAction {
 // 	users: string;
@@ -12,6 +15,7 @@ import _ = require("lodash");
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
+	// const payload = _.get(ctx.message, "request");
 	await ctx.audit.log(JSON.stringify(ctx));
 
 	// const msgId = ts();
@@ -21,10 +25,13 @@ export const handler: CommandHandler = async ctx => {
 	// 	ts: msgId,
 	// });
 
-	await ctx.message.send(buildButtonMessage(), {
+	const baseMsg = buildButtonMessage();
+	const msg = buildResponse(baseMsg, ctx.trigger, channel);
+	const response = await ctx.message.send(msg, {
 		users: [],
 		channels: channel,
 	});
+	await ctx.audit.log(JSON.stringify(response));
 
 	// await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
@@ -307,4 +314,31 @@ function buildButtonMessage(): slack.SlackMessage {
 			} as ActionsBlock,
 		],
 	};
+}
+
+function buildResponse(
+	baseMsg: slack.SlackMessage,
+	payload: CommandIncoming,
+	destination: any,
+): any {
+	const response: HandlerResponse & {
+		parameters: Arg[];
+		parameter_specs: Parameter[];
+		question: any;
+		auto_submit: boolean;
+	} = {
+		api_version: "1",
+		correlation_id: payload.correlation_id,
+		team: payload.team,
+		command: payload.command,
+		source: payload.source,
+		destinations: [destination],
+		parameters: payload.parameters,
+		auto_submit: undefined,
+		question: undefined,
+		parameter_specs: undefined,
+		content_type: AtomistContinuationMimeType,
+	} as any;
+
+	return response;
 }
