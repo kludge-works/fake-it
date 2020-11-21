@@ -1,12 +1,7 @@
 import { CommandHandler } from "@atomist/skill";
-import { ts } from "@atomist/skill/lib/slack";
 import { slack } from "@atomist/skill";
-import {
-	ActionsBlock,
-	InputBlock,
-	PlainTextElement,
-	SlackModal,
-} from "@atomist/slack-messages";
+import { ActionsBlock, SectionBlock } from "@atomist/slack-messages";
+import _ = require("lodash");
 
 // interface ProvisionAction {
 // 	users: string;
@@ -16,32 +11,21 @@ import {
 // }
 
 export const handler: CommandHandler = async ctx => {
-	// const channel = _.get(ctx.trigger.source, "slack.channel.name");
+	const channel = _.get(ctx.trigger.source, "slack.channel.name");
 	await ctx.audit.log(JSON.stringify(ctx));
 
-	const msgId = ts();
-	const msg = buildMessage();
-	const response = await ctx.message.respond(msg, {
-		id: msgId.toString(),
-		ts: msgId,
+	// const msgId = ts();
+	// const msg = buildMessage();
+	// const response = await ctx.message.respond(msg, {
+	// 	id: msgId.toString(),
+	// 	ts: msgId,
+	// });
+
+	await ctx.message.send(buildButtonMessage(), {
+		users: [],
+		channels: channel,
 	});
 
-	await ctx.audit.log(JSON.stringify(response));
-
-	// const response = await ctx.parameters.prompt<ProvisionAction>(
-	// 	{
-	// 		environmentName: {
-	// 			displayName: "environment Name",
-	// 		} as ParameterObjectValue,
-	// 		users: { defaultValue: "boris" },
-	// 		action: {},
-	// 		numberMachines: {
-	// 			description: "Number of Machines",
-	// 			type: "number",
-	// 		},
-	// 	},
-	// 	{},
-	// );
 	// await ctx.audit.log(JSON.stringify(response));
 	// await ctx.message
 	// 	.send(
@@ -61,94 +45,94 @@ export const handler: CommandHandler = async ctx => {
 	// };
 };
 
-function buildMessage(): slack.SlackMessage {
-	return {
-		title: {
-			type: "plain_text",
-			text: "Modal Title",
-		},
-		submit: {
-			type: "plain_text",
-			text: "Submit",
-		},
-		blocks: [
-			{
-				type: "input",
-				element: {
-					type: "plain_text_input",
-					action_id: "title",
-					placeholder: {
-						type: "plain_text",
-						text: "What do you want to ask of the world?",
-					},
-				},
-				label: {
-					type: "plain_text",
-					text: "Title",
-				},
-			} as InputBlock,
-			{
-				type: "input",
-				element: {
-					type: "multi_channels_select",
-					action_id: "channels",
-					placeholder: {
-						type: "plain_text",
-						text: "Where should the poll be sent?",
-					},
-				},
-				label: {
-					type: "plain_text",
-					text: "Channel(s)",
-				},
-			},
-			{
-				type: "input",
-				element: {
-					type: "plain_text_input",
-					action_id: "option_1",
-					placeholder: {
-						type: "plain_text",
-						text: "First option",
-					},
-				} as PlainTextElement,
-				label: {
-					type: "plain_text",
-					text: "Option 1",
-				},
-			} as InputBlock,
-			{
-				type: "input",
-				element: {
-					type: "plain_text_input",
-					action_id: "option_2",
-					placeholder: {
-						type: "plain_text",
-						text: "How many options do they need, really?",
-					},
-				},
-				label: {
-					type: "plain_text",
-					text: "Option 2",
-				},
-			} as InputBlock,
-			{
-				type: "actions",
-				elements: [
-					{
-						type: "button",
-						action_id: "add_option",
-						text: {
-							type: "plain_text",
-							text: "Add another option  ",
-						},
-					},
-				],
-			} as ActionsBlock,
-		],
-		type: "modal",
-	} as SlackModal;
-}
+// function buildMessage(): slack.SlackMessage {
+// 	return {
+// 		title: {
+// 			type: "plain_text",
+// 			text: "Modal Title",
+// 		},
+// 		submit: {
+// 			type: "plain_text",
+// 			text: "Submit",
+// 		},
+// 		blocks: [
+// 			{
+// 				type: "input",
+// 				element: {
+// 					type: "plain_text_input",
+// 					action_id: "title",
+// 					placeholder: {
+// 						type: "plain_text",
+// 						text: "What do you want to ask of the world?",
+// 					},
+// 				},
+// 				label: {
+// 					type: "plain_text",
+// 					text: "Title",
+// 				},
+// 			} as InputBlock,
+// 			{
+// 				type: "input",
+// 				element: {
+// 					type: "multi_channels_select",
+// 					action_id: "channels",
+// 					placeholder: {
+// 						type: "plain_text",
+// 						text: "Where should the poll be sent?",
+// 					},
+// 				},
+// 				label: {
+// 					type: "plain_text",
+// 					text: "Channel(s)",
+// 				},
+// 			},
+// 			{
+// 				type: "input",
+// 				element: {
+// 					type: "plain_text_input",
+// 					action_id: "option_1",
+// 					placeholder: {
+// 						type: "plain_text",
+// 						text: "First option",
+// 					},
+// 				} as PlainTextElement,
+// 				label: {
+// 					type: "plain_text",
+// 					text: "Option 1",
+// 				},
+// 			} as InputBlock,
+// 			{
+// 				type: "input",
+// 				element: {
+// 					type: "plain_text_input",
+// 					action_id: "option_2",
+// 					placeholder: {
+// 						type: "plain_text",
+// 						text: "How many options do they need, really?",
+// 					},
+// 				},
+// 				label: {
+// 					type: "plain_text",
+// 					text: "Option 2",
+// 				},
+// 			} as InputBlock,
+// 			{
+// 				type: "actions",
+// 				elements: [
+// 					{
+// 						type: "button",
+// 						action_id: "add_option",
+// 						text: {
+// 							type: "plain_text",
+// 							text: "Add another option  ",
+// 						},
+// 					},
+// 				],
+// 			} as ActionsBlock,
+// 		],
+// 		type: "modal",
+// 	} as SlackModal;
+// }
 
 // function buildMessage(): slack.SlackMessage {
 // 	return {
@@ -277,3 +261,50 @@ function buildMessage(): slack.SlackMessage {
 // 		],
 // 	};
 // }
+
+function buildButtonMessage(): slack.SlackMessage {
+	return {
+		blocks: [
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: "This is a section block with a button.",
+				},
+				accessory: {
+					type: "button",
+					text: {
+						type: "plain_text",
+						text: "Click Me",
+					},
+					value: "click_me_123",
+					action_id: "button",
+				},
+			} as SectionBlock,
+			{
+				type: "actions",
+				block_id: "actionblock789",
+				elements: [
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "Primary Button",
+						},
+						style: "primary",
+						value: "click_me_456",
+					},
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "Link Button",
+						},
+						style: "danger",
+						value: "no_click_me_123",
+					},
+				],
+			} as ActionsBlock,
+		],
+	};
+}
