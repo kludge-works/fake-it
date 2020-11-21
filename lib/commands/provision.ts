@@ -1,7 +1,6 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import { ActionsBlock, SectionBlock } from "@atomist/slack-messages";
-import { HandlerResponse, Parameter } from "@atomist/skill/lib/message";
-import { Arg, CommandIncoming } from "@atomist/skill/lib/payload";
+import { CommandIncoming } from "@atomist/skill/lib/payload";
 import { AtomistContinuationMimeType } from "@atomist/skill/lib/prompt/prompt";
 import _ = require("lodash");
 
