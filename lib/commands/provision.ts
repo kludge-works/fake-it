@@ -1,10 +1,9 @@
-import { CommandHandler } from "@atomist/skill";
-import { slack } from "@atomist/skill";
+import { CommandHandler, slack } from "@atomist/skill";
 import { ActionsBlock, SectionBlock } from "@atomist/slack-messages";
-import _ = require("lodash");
 import { HandlerResponse, Parameter } from "@atomist/skill/lib/message";
 import { Arg, CommandIncoming } from "@atomist/skill/lib/payload";
 import { AtomistContinuationMimeType } from "@atomist/skill/lib/prompt/prompt";
+import _ = require("lodash");
 
 // interface ProvisionAction {
 // 	users: string;
@@ -321,12 +320,7 @@ function buildResponse(
 	payload: CommandIncoming,
 	destination: any,
 ): any {
-	const response: HandlerResponse & {
-		parameters: Arg[];
-		parameter_specs: Parameter[];
-		question: any;
-		auto_submit: boolean;
-	} = {
+	return {
 		api_version: "1",
 		correlation_id: payload.correlation_id,
 		team: payload.team,
@@ -338,7 +332,6 @@ function buildResponse(
 		question: undefined,
 		parameter_specs: undefined,
 		content_type: AtomistContinuationMimeType,
+		...baseMsg,
 	} as any;
-
-	return response;
 }
