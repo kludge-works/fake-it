@@ -14,7 +14,6 @@ import _ = require("lodash");
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
 	// const payload = _.get(ctx.message, "request");
-	await ctx.audit.log(JSON.stringify(ctx));
 
 	// const msgId = ts();
 	// const msg = buildMessage();
@@ -25,6 +24,7 @@ export const handler: CommandHandler = async ctx => {
 
 	const baseMsg = buildButtonMessage();
 	const msg = buildResponse(baseMsg, ctx.trigger, channel);
+	await ctx.audit.log(JSON.stringify(msg));
 	const response = await ctx.message.send(msg, {
 		users: [],
 		channels: channel,
