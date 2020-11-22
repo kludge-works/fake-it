@@ -23,9 +23,9 @@ export const handler: CommandHandler = async ctx => {
 	// 	ts: msgId,
 	// });
 
+	await ctx.audit.log(JSON.stringify(ctx));
 	// const baseMsg = buildButtonMessage();
 	const msg = buildModalMessage();
-	await ctx.audit.log(JSON.stringify(msg));
 	const response = await ctx.message.send(msg, {
 		users: [],
 		channels: channel,
