@@ -43,6 +43,7 @@ function buildModalMessage(): slack.SlackMessage {
 		blocks: [
 			{
 				type: "input",
+				dispatch_action: true,
 				block_id: "message",
 				label: {
 					type: "plain_text",
