@@ -43,7 +43,6 @@ function buildModalMessage(): slack.SlackMessage {
 		blocks: [
 			{
 				type: "input",
-				response_url_enabled: true,
 				block_id: "message",
 				label: {
 					type: "plain_text",
@@ -59,6 +58,25 @@ function buildModalMessage(): slack.SlackMessage {
 					multiline: true,
 				},
 			} as InputBlock,
+			{
+				type: "actions",
+				elements: [
+					{
+						type: "conversations_select",
+						placeholder: {
+							type: "plain_text",
+							text: "Select private conversation",
+							emoji: true,
+						},
+						action_id: "actionId-0",
+					},
+				],
+			},
+			// {
+			// 	action_id: "my_action_id",
+			// 	type: "conversations_select",
+			// 	response_url_enabled: true,
+			// },
 		],
 		close: {
 			type: "plain_text",
