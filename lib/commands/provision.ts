@@ -68,6 +68,8 @@ function buildModalMessage(): slack.SlackMessage {
 							text: "Select private conversation",
 							emoji: true,
 						},
+						response_url_enabled: true,
+						default_to_current_conversation: true,
 						action_id: "actionId-0",
 					},
 				],
