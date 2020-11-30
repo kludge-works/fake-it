@@ -14,7 +14,7 @@ import _ = require("lodash");
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
-	// const payload = _.get(ctx.message, "request");
+	const msgId = _.get(ctx.trigger.source, "slack.message.id");
 
 	// const msgId = ts();
 	// const msg = buildMessage();
@@ -24,12 +24,36 @@ export const handler: CommandHandler = async ctx => {
 	// });
 
 	await ctx.audit.log(JSON.stringify(ctx));
-	// const baseMsg = buildButtonMessage();
-	const msg = buildModalMessage();
-	const response = await ctx.message.send(msg, {
-		users: [],
-		channels: channel,
-	});
+	const parameters = _.get(ctx.message, "request.parameters");
+	await ctx.audit.log(JSON.stringify(parameters));
+
+	let msg;
+	if (parameters === undefined || parameters.length == 0) {
+		msg = buildModalMessage();
+	} else {
+		const stateValues = _.first(
+			_.filter(parameters, ["name", "stateValues"]),
+		);
+		const msgInput = _.get(
+			stateValues,
+			"value.message.message_input.value",
+		);
+		await ctx.audit.log(msgInput);
+		msg = {
+			response_action: "errors",
+			errors: {
+				message_input: "You may not select a due date in the past",
+			},
+		};
+	}
+	const response = await ctx.message.send(
+		msg,
+		{
+			users: [],
+			channels: channel,
+		},
+		{ id: msgId, ts: msgId },
+	);
 	await ctx.audit.log(JSON.stringify(response));
 };
 
@@ -50,7 +74,7 @@ function buildModalMessage(): slack.SlackMessage {
 				},
 				element: {
 					type: "plain_text_input",
-					action_id: "input",
+					action_id: "message_input",
 					placeholder: {
 						type: "plain_text",
 						text: "Your message",
