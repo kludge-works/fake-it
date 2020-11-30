@@ -28,9 +28,11 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(JSON.stringify(parameters));
 
 	let msg;
+	let msgOptions = {};
 	if (parameters === undefined || parameters.length == 0) {
 		msg = buildModalMessage();
 	} else {
+		msgOptions = { id: msgId, ts: msgId };
 		const stateValues = _.first(
 			_.filter(parameters, ["name", "stateValues"]),
 		);
@@ -52,7 +54,7 @@ export const handler: CommandHandler = async ctx => {
 			users: [],
 			channels: channel,
 		},
-		{ id: msgId, ts: msgId },
+		msgOptions,
 	);
 	await ctx.audit.log(JSON.stringify(response));
 };
