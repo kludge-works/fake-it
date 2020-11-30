@@ -23,9 +23,9 @@ export const handler: CommandHandler = async ctx => {
 	// 	ts: msgId,
 	// });
 
-	await ctx.audit.log(JSON.stringify(ctx));
+	// await ctx.audit.log(JSON.stringify(ctx));
 	const parameters = _.get(ctx.message, "request.parameters");
-	await ctx.audit.log(JSON.stringify(parameters));
+	// await ctx.audit.log(JSON.stringify(parameters));
 
 	let msg;
 	let msgOptions = {};
@@ -48,6 +48,7 @@ export const handler: CommandHandler = async ctx => {
 			},
 		};
 	}
+	await ctx.audit.log(JSON.stringify(msgOptions));
 	const response = await ctx.message.send(
 		msg,
 		{
