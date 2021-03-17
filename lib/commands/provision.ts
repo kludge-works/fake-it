@@ -26,28 +26,27 @@ export const handler: CommandHandler = async ctx => {
 	// await ctx.audit.log(JSON.stringify(ctx));
 	const parameters = _.get(ctx.message, "request.parameters");
 	// await ctx.audit.log(JSON.stringify(parameters));
+	// const msg;
+	// const msgOptions = {};
+	// if (parameters === undefined || parameters.length == 0) {
+	// 	msg = buildModalMessage();
+	// 	msg = { msg, errors };
+	// } else {
+	// 	msgOptions = { id: msgId, ts: msgId };
+	// 	const stateValues = _.first(
+	// 		_.filter(parameters, ["name", "stateValues"]),
+	// 	);
+	// 	const msgInput = _.get(
+	// 		stateValues,
+	// 		"value.message.message_input.value",
+	// 	);
+	// 	await ctx.audit.log(msgInput);
+	// 	msg = errors;
+	// }
 
-	let msg;
-	let msgOptions = {};
-	if (parameters === undefined || parameters.length == 0) {
-		msg = buildModalMessage();
-	} else {
-		msgOptions = { id: msgId, ts: msgId };
-		const stateValues = _.first(
-			_.filter(parameters, ["name", "stateValues"]),
-		);
-		const msgInput = _.get(
-			stateValues,
-			"value.message.message_input.value",
-		);
-		await ctx.audit.log(msgInput);
-		msg = {
-			response_action: "errors",
-			errors: {
-				message_input: "You may not select a due date in the past",
-			},
-		};
-	}
+	const msgOptions = { id: msgId, ts: msgId };
+	const msg = buildModalMessage();
+
 	await ctx.audit.log(JSON.stringify(msgOptions));
 	const response = await ctx.message.send(
 		msg,
@@ -70,42 +69,39 @@ function buildModalMessage(): slack.SlackMessage {
 		blocks: [
 			{
 				type: "input",
-				block_id: "message",
-				label: {
-					type: "plain_text",
-					text: "Message",
-				},
 				element: {
-					type: "plain_text_input",
-					action_id: "message_input",
+					type: "users_select",
 					placeholder: {
 						type: "plain_text",
-						text: "Your message",
+						text: "Select users",
+						emoji: true,
 					},
-					multiline: true,
+					action_id: "multi_users_select-action",
+				},
+				label: {
+					type: "plain_text",
+					text: "Label",
+					emoji: true,
 				},
 			} as InputBlock,
 			{
-				type: "actions",
-				elements: [
-					{
-						type: "conversations_select",
-						placeholder: {
-							type: "plain_text",
-							text: "Select private conversation",
-							emoji: true,
-						},
-						response_url_enabled: true,
-						default_to_current_conversation: true,
-						action_id: "actionId-0",
+				type: "input",
+				element: {
+					type: "datepicker",
+					initial_date: "1990-04-28",
+					placeholder: {
+						type: "plain_text",
+						text: "Select a date",
+						emoji: true,
 					},
-				],
-			},
-			// {
-			// 	action_id: "my_action_id",
-			// 	type: "conversations_select",
-			// 	response_url_enabled: true,
-			// },
+					action_id: "datepicker-action",
+				},
+				label: {
+					type: "plain_text",
+					text: "Label",
+					emoji: true,
+				},
+			} as InputBlock,
 		],
 		close: {
 			type: "plain_text",
@@ -129,17 +125,17 @@ function buildModalMessage(): slack.SlackMessage {
 			{
 				type: "actions",
 				elements: [
-					elementForCommand(
-						{
-							type: "button",
-							text: {
-								type: "plain_text",
-								text: "Say hi!",
-							},
-						} as ButtonElement,
-						"provision",
-						{ response: "hi" },
-					),
+					// elementForCommand(
+					// 	{
+					// 		type: "button",
+					// 		text: {
+					// 			type: "plain_text",
+					// 			text: "Say hi!",
+					// 		},
+					// 	} as ButtonElement,
+					// 	"provision",
+					// 	{ response: "hi" },
+					// ),
 					buttonForModal(
 						{
 							type: "button",
