@@ -46,7 +46,7 @@
     "clean:test": "rimraf .nyc_output coverage",
     "compile": "run-s compile:ts",
     "compile:ts": "tsc --project .",
-    "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
+    "doc": "typedoc --exclude \"**/*.d.ts\" --out doc index.ts lib",
     "git:info": "atm-git-info",
     "lint": "eslint --ext .ts .",
     "lint:fix": "npm run lint -- --fix",
