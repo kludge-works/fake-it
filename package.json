@@ -61,8 +61,7 @@
     "skill:package": "atm-skill package",
     "skill:register": "atm-skill register",
     "atm:lint:prettier": "prettier --write",
-    "atm:lint:eslint": "eslint --fix",
-    "prepare": "husky install"
+    "atm:lint:eslint": "eslint --fix"
   },
   "engines": {
     "node": ">=8.2.0",
