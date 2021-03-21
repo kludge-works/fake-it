@@ -1,11 +1,15 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import {
 	ActionsBlock,
+	ButtonElement,
 	InputBlock,
 	SectionBlock,
 	SlackModal,
 } from "@atomist/slack-messages";
-import { buttonForModal } from "@atomist/skill/lib/slack/block";
+import {
+	buttonForModal,
+	elementForCommand,
+} from "@atomist/skill/lib/slack/block";
 import _ = require("lodash");
 
 export const handler: CommandHandler = async ctx => {
@@ -20,7 +24,7 @@ export const handler: CommandHandler = async ctx => {
 	// });
 
 	// await ctx.audit.log(JSON.stringify(ctx));
-	// const parameters = _.get(ctx.message, "request.parameters");
+	const parameters = _.get(ctx.message, "request.parameters");
 	// await ctx.audit.log(JSON.stringify(parameters));
 	// const msg;
 	// const msgOptions = {};
