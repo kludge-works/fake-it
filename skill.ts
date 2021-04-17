@@ -70,5 +70,12 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			description: "provision env",
 			pattern: /^provision.*$/,
 		},
+		{
+			name: "ipAddresser",
+			displayName: "Allow Ip access",
+			description:
+				"Allow users to manage their own access of Jenkins|nexus subnet",
+			pattern: /^jenkins ip.*$/,
+		},
 	],
 });
