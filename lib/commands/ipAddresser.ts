@@ -22,7 +22,7 @@ export const handler: CommandHandler = async ctx => {
 			slack.errorMessage("Theres no place like", bold("no"), ctx),
 		);
 	} else {
-		await ctx.message.respond(
+		const response = await ctx.message.respond(
 			slack.questionMessage(
 				"hmm I don't know you",
 				`${user("U018XUBKWAF")} can I give ${user(
@@ -32,6 +32,7 @@ export const handler: CommandHandler = async ctx => {
 				addConfirmationButtons(),
 			),
 		);
+		await ctx.audit.log(`response: ${JSON.stringify(response)}`);
 	}
 
 	return {
