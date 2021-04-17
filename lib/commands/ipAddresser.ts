@@ -4,9 +4,10 @@ import * as _ from "lodash";
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
 
-	// await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
-	// await ctx.audit.log(`ctx.parameters: ${JSON.stringify(ctx.parameters)}`);
-	// await ctx.audit.log(`ctx.trigger: ${JSON.stringify(ctx.trigger)}`);
+	await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
+	await ctx.audit.log(`ctx.parameters: ${JSON.stringify(ctx.parameters)}`);
+	await ctx.audit.log(`ctx.trigger: ${JSON.stringify(ctx.trigger)}`);
+
 	const {
 		groups: { ipAddress },
 	} = /^allow (jenkins|nexus) access for (?<ipAddress>.*)$/.exec(raw_message);
