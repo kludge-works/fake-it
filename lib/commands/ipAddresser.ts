@@ -1,6 +1,6 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { bold, emoji, user } from "@atomist/slack-messages";
+import { bold, user } from "@atomist/slack-messages";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -24,7 +24,7 @@ export const handler: CommandHandler = async ctx => {
 			slack.questionMessage(
 				"hmm I don't know you",
 				`${user("U018XUBKWAF")} can I give ${user(
-					"userId",
+					userId,
 				)} firewall access?`,
 				ctx,
 			),
