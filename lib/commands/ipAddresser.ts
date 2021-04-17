@@ -4,11 +4,13 @@ import { bold, user } from "@atomist/slack-messages";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
-	const userId = _.get(ctx.message, "source.user.id");
+	const userId = _.get(ctx.message, "source.slack.user.id");
 
 	await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
 	await ctx.audit.log(`ctx.parameters: ${JSON.stringify(ctx.parameters)}`);
 	await ctx.audit.log(`ctx.trigger: ${JSON.stringify(ctx.trigger)}`);
+	await ctx.audit.log(`raw_message: ${raw_message}`);
+	await ctx.audit.log(`userId: ${userId}`);
 
 	const {
 		groups: { ipAddress },
