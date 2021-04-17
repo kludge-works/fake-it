@@ -1,6 +1,6 @@
 import { CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { bold, user } from "@atomist/slack-messages";
+import { Action, Attachment, bold, user } from "@atomist/slack-messages";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -29,6 +29,7 @@ export const handler: CommandHandler = async ctx => {
 					userId,
 				)} firewall access?`,
 				ctx,
+				addConfirmationButtons(),
 			),
 		);
 	}
@@ -38,3 +39,22 @@ export const handler: CommandHandler = async ctx => {
 		reason: "Success",
 	};
 };
+
+function addConfirmationButtons(): Partial<Attachment> {
+	return {
+		actions: [
+			{
+				text: "yes",
+				name: "confirmation",
+				type: "button",
+				value: "true",
+			} as Action,
+			{
+				text: "no",
+				name: "confirmation",
+				type: "button",
+				value: "false",
+			} as Action,
+		],
+	};
+}
