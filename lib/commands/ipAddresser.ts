@@ -1,5 +1,4 @@
 import { CommandHandler, slack } from "@atomist/skill";
-import _ = require("lodash");
 
 export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
