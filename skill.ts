@@ -74,8 +74,8 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			name: "ipAddresser",
 			displayName: "Allow Ip access",
 			description:
-				"Allow users to manage their own access of Jenkins|nexus subnet",
-			pattern: /^jenkins ip.*$/,
+				"Allow users to manage their own access of Jenkins|Nexus subnet",
+			pattern: /^allow jenkins access for .*$/,
 		},
 	],
 });
