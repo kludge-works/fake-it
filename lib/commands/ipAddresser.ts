@@ -2,7 +2,6 @@ import { CommandHandler, MessageOptions, slack } from "@atomist/skill";
 import * as _ from "lodash";
 import {
 	ActionsBlock,
-	Attachment,
 	bold,
 	ButtonElement,
 	ContextBlock,
@@ -13,12 +12,16 @@ import {
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
 import { elementForCommand } from "@atomist/skill/lib/slack/block";
+import JSON = Mocha.reporters.JSON;
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
 	const userId = _.get(ctx.message, "source.slack.user.id");
 	const parentMsg = _.get(ctx.trigger.source, "slack.message.id");
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
+	const response = _.get(ctx.message, "request.parameters");
+
+	let reason: string;
 
 	const msgId = ts();
 	const msgOptions = {
@@ -35,72 +38,43 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
 	await ctx.audit.log(`ctx.parameters: ${JSON.stringify(ctx.parameters)}`);
 	await ctx.audit.log(`ctx.trigger: ${JSON.stringify(ctx.trigger)}`);
+	await ctx.audit.log(`request.parameters: ${JSON.stringify(response)}`);
 
-	const {
-		groups: { ipAddress },
-	} = /^allow (jenkins|nexus) access for (?<ipAddress>.*)$/.exec(raw_message);
-	await ctx.audit.log(`ipAddress: ${ipAddress}`);
-
-	if ("127.0.0.1" === ipAddress) {
-		await ctx.message.respond(
-			slack.errorMessage("Theres no place like", bold("no"), ctx),
-		);
+	if (response.length) {
+		const confirmation = response[0].value;
+		await ctx.audit.log(`confirmation: ${JSON.stringify(confirmation)}`);
 	} else {
-		const response = await ctx.message.send(
-			questionMessage(ctx),
-			{ users: [], channels: channel },
-			msgOptions,
+		const {
+			groups: { ipAddress },
+		} = /^allow (jenkins|nexus) access for (?<ipAddress>.*)$/.exec(
+			raw_message,
 		);
-		await ctx.audit.log(`response: ${JSON.stringify(response)}`);
+		await ctx.audit.log(`ipAddress: ${ipAddress}`);
+
+		if ("127.0.0.1" === ipAddress) {
+			await ctx.message.respond(
+				slack.errorMessage("Theres no place like", bold("no"), ctx),
+			);
+			reason = "Declined for 127.0.0.1 IP Address";
+		} else {
+			const response = await ctx.message.send(
+				questionMessage(ctx),
+				{ users: [], channels: channel },
+				msgOptions,
+			);
+			await ctx.audit.log(`response: ${JSON.stringify(response)}`);
+			reason = "Prompted for access permission";
+		}
 	}
 
 	return {
 		code: 0,
-		reason: "Success",
+		reason: reason,
 	};
 };
 
-// function addConfirmationButtons(): Partial<Attachment> {
-// 	return {
-// 		actions: [
-// 			{
-// 				text: "yes",
-// 				name: "confirmation",
-// 				type: "button",
-// 				value: "true",
-// 				style: "primary",
-// 			} as Action,
-// 			{
-// 				text: "no",
-// 				name: "confirmation",
-// 				type: "button",
-// 				value: "false",
-// 			} as Action,
-// 		],
-// 	};
-// }
-
-function questionMessage(
-	ctx: Contextual<any, any>,
-	options: Partial<Attachment> = {},
-): SlackMessage {
-	const msg: SlackMessage = {
-		// attachments: [
-		// 	{
-		// 		author_icon: `https://images.atomist.com/rug/question.png`,
-		// 		author_name: title,
-		// 		author_link: ctx.audit.url,
-		// 		text,
-		// 		fallback: text,
-		// 		color: "#B5B5B5",
-		// 		mrkdwn_in: ["text"],
-		// 		footer: footer(ctx),
-		// 		footer_icon:
-		// 			"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
-		// 		ts: ts(),
-		// 		...options,
-		// 	},
-		// ],
+function questionMessage(ctx: Contextual<any, any>): SlackMessage {
+	return {
 		blocks: [
 			{
 				type: "header",
@@ -132,7 +106,7 @@ function questionMessage(
 							},
 						} as ButtonElement,
 						"ipAddresser",
-						{ response: "YES-123" },
+						{ confirmation: "CONFIRMED" },
 					),
 					elementForCommand(
 						{
@@ -144,7 +118,7 @@ function questionMessage(
 							},
 						} as ButtonElement,
 						"ipAddresser",
-						{ response: "NO-987" },
+						{ confirmation: "DENIED" },
 					),
 				],
 			} as ActionsBlock,
@@ -163,7 +137,6 @@ function questionMessage(
 			} as ContextBlock,
 		],
 	};
-	return msg;
 }
 
 export function footer(ctx: Contextual<any, any>): string {
