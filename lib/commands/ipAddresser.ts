@@ -5,6 +5,7 @@ import {
 	bold,
 	ButtonElement,
 	ContextBlock,
+	emoji,
 	HeaderBlock,
 	SectionBlock,
 	SlackMessage,
@@ -41,8 +42,29 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(`request.parameters: ${stringify(response)}`);
 
 	if (response.length) {
-		const confirmation = response[0].value;
+		const confirmation = response["confirmation"].value;
+		const ipAddress = response["ipAddress"].value;
+
 		await ctx.audit.log(`confirmation: ${stringify(confirmation)}`);
+		await ctx.audit.log(`ipAddress: ${stringify(ipAddress)}`);
+
+		if ("CONFIRMED" === confirmation) {
+			await ctx.message.respond(
+				slack.successMessage(
+					"ELB Access granted",
+					`for ${ipAddress}/32`,
+					ctx,
+				),
+			);
+		} else {
+			await ctx.message.respond(
+				slack.errorMessage(
+					"ELB Access denied",
+					`for ${ipAddress}/32`,
+					ctx,
+				),
+			);
+		}
 	} else {
 		const {
 			groups: { ipAddress },
@@ -58,7 +80,7 @@ export const handler: CommandHandler = async ctx => {
 			reason = "Declined for 127.0.0.1 IP Address";
 		} else {
 			const response = await ctx.message.send(
-				questionMessage(ctx),
+				questionMessage(ctx, ipAddress),
 				{ users: [], channels: channel },
 				msgOptions,
 			);
@@ -73,14 +95,17 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function questionMessage(ctx: Contextual<any, any>): SlackMessage {
+function questionMessage(
+	ctx: Contextual<any, any>,
+	ipAddress: string,
+): SlackMessage {
 	return {
 		blocks: [
 			{
 				type: "header",
 				text: {
 					type: "plain_text",
-					text: "hmm I don't know you :thinking_face:",
+					text: `hmm I don't know you ${emoji("thinking_face")}`,
 					emoji: true,
 				},
 			} as HeaderBlock,
@@ -101,24 +126,24 @@ function questionMessage(ctx: Contextual<any, any>): SlackMessage {
 							style: "primary",
 							text: {
 								type: "plain_text",
-								text: ":white_check_mark",
+								text: emoji("white_check_mark"),
 								emoji: true,
 							},
 						} as ButtonElement,
 						"ipAddresser",
-						{ confirmation: "CONFIRMED" },
+						{ confirmation: "CONFIRMED", ipAddress: ipAddress },
 					),
 					elementForCommand(
 						{
 							type: "button",
 							text: {
 								type: "plain_text",
-								text: ":no_entry:",
+								text: emoji("no_entry"),
 								emoji: true,
 							},
 						} as ButtonElement,
 						"ipAddresser",
-						{ confirmation: "DENIED" },
+						{ confirmation: "DENIED", ipAddress: ipAddress },
 					),
 				],
 			} as ActionsBlock,
