@@ -93,7 +93,7 @@ export const handler: CommandHandler = async ctx => {
 			const msgOptions = {
 				id: msgId.toString(),
 				ts: msgId,
-				thread: parentMsg,
+				// thread: parentMsg,
 			} as MessageOptions;
 
 			const msgBody = `${user(userId)} I don't know ${user(
@@ -117,7 +117,7 @@ export const handler: CommandHandler = async ctx => {
 
 function questionMessage(
 	ctx: Contextual<any, any>,
-	msgBody: string,
+	requestingUser: string,
 	ipAddress: string,
 	msgId: number,
 ): SlackMessage {
@@ -127,17 +127,35 @@ function questionMessage(
 				type: "header",
 				text: {
 					type: "plain_text",
-					text: `hmm I don't know you ${emoji("thinking_face")}`,
+					text: `Jenkins/Nexus access`,
 					emoji: true,
 				},
 			} as HeaderBlock,
 			{
 				type: "section",
-				text: {
-					type: "plain_text",
-					text: msgBody,
-					emoji: true,
-				},
+				fields: [
+					{
+						type: "mrkdwn",
+						text: `*Requested by:*\n<@${requestingUser}>`,
+					},
+					{
+						type: "mrkdwn",
+						text: `*IP address:*\n${ipAddress}`,
+					},
+				],
+			} as SectionBlock,
+			{
+				type: "section",
+				fields: [
+					{
+						type: "mrkdwn",
+						text: "*When:*\nnow",
+					},
+					{
+						type: "mrkdwn",
+						text: "*Approval:*\n_pending_",
+					},
+				],
 			} as SectionBlock,
 			{
 				type: "actions",
@@ -173,6 +191,7 @@ function questionMessage(
 							confirmation: "DENIED",
 							ipAddress: ipAddress,
 							messageId: msgId,
+							requestingUser: requestingUser,
 						},
 					),
 				],
