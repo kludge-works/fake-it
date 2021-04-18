@@ -5,6 +5,7 @@ import {
 	Attachment,
 	bold,
 	ButtonElement,
+	ContextBlock,
 	HeaderBlock,
 	SectionBlock,
 	SlackMessage,
@@ -118,9 +119,6 @@ function questionMessage(
 				},
 			} as SectionBlock,
 			{
-				type: "divider",
-			},
-			{
 				type: "actions",
 				elements: [
 					elementForCommand(
@@ -131,8 +129,8 @@ function questionMessage(
 								text: "Say hi!",
 							},
 						} as ButtonElement,
-						"provision",
-						{ response: "hi-1" },
+						"ipAddresser",
+						{ response: "YES-123" },
 					),
 					elementForCommand(
 						{
@@ -142,12 +140,29 @@ function questionMessage(
 								text: "Say hi!",
 							},
 						} as ButtonElement,
-						"provision",
-						{ response: "hi-123" },
+						"ipAddresser",
+						{ response: "NO-987" },
 					),
 				],
 			} as ActionsBlock,
+			{
+				type: "divider",
+			},
+			{
+				type: "context",
+				elements: [
+					{
+						type: "plain_text",
+						text: footer(ctx),
+						emoji: true,
+					},
+				],
+			} as ContextBlock,
 		],
 	};
 	return msg;
+}
+
+export function footer(ctx: Contextual<any, any>): string {
+	return `${ctx.skill.namespace}/${ctx.skill.name}:${ctx.skill.version}`;
 }
