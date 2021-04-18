@@ -52,17 +52,23 @@ export const handler: CommandHandler = async ctx => {
 
 		let msg: SlackMessage;
 		if ("CONFIRMED" === confirmation) {
-			msg = slack.successMessage(
-				"ELB Access granted",
-				`for ${ipAddress}/32`,
+			msg = firewallAccessMessage(
 				ctx,
+				requestingUserId,
+				ipAddress,
+				new Date().toLocaleString(),
+				null,
+				"_Approved_",
 			);
 			reason = `ELB Access granted for ${ipAddress}/32`;
 		} else {
-			msg = slack.errorMessage(
-				"ELB Access denied",
-				`for ${ipAddress}/32`,
+			msg = firewallAccessMessage(
 				ctx,
+				requestingUserId,
+				ipAddress,
+				new Date().toLocaleString(),
+				null,
+				"_Denied_",
 			);
 			reason = `ELB Access denied for ${ipAddress}/32`;
 		}
@@ -173,7 +179,8 @@ function firewallAccessMessage(
 	requestingUser: string,
 	ipAddress: string,
 	requestDateTime: string,
-	actions: ActionsBlock,
+	actions?: ActionsBlock,
+	approvalStatus = "_pending_",
 ): SlackMessage {
 	return {
 		blocks: [
@@ -207,7 +214,7 @@ function firewallAccessMessage(
 					},
 					{
 						type: "mrkdwn",
-						text: "*Approval:*\n_pending_",
+						text: `*Approval:*\n${approvalStatus}`,
 					},
 				],
 			} as SectionBlock,
