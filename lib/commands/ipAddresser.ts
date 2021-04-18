@@ -12,7 +12,7 @@ import {
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
 import { elementForCommand } from "@atomist/skill/lib/slack/block";
-import JSON = Mocha.reporters.JSON;
+import stringify = require("json-stable-stringify");
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -34,15 +34,15 @@ export const handler: CommandHandler = async ctx => {
 	await ctx.audit.log(`userId: ${userId}`);
 	await ctx.audit.log(`parentMsg: ${parentMsg}`);
 	await ctx.audit.log(`channel: ${channel}`);
-	await ctx.audit.log(`msgOptions: ${JSON.stringify(msgOptions)}`);
-	await ctx.audit.log(`ctx.message: ${JSON.stringify(ctx.message)}`);
-	await ctx.audit.log(`ctx.parameters: ${JSON.stringify(ctx.parameters)}`);
-	await ctx.audit.log(`ctx.trigger: ${JSON.stringify(ctx.trigger)}`);
-	await ctx.audit.log(`request.parameters: ${JSON.stringify(response)}`);
+	await ctx.audit.log(`msgOptions: ${stringify(msgOptions)}`);
+	await ctx.audit.log(`ctx.message: ${stringify(ctx.message)}`);
+	await ctx.audit.log(`ctx.parameters: ${stringify(ctx.parameters)}`);
+	await ctx.audit.log(`ctx.trigger: ${stringify(ctx.trigger)}`);
+	await ctx.audit.log(`request.parameters: ${stringify(response)}`);
 
 	if (response.length) {
 		const confirmation = response[0].value;
-		await ctx.audit.log(`confirmation: ${JSON.stringify(confirmation)}`);
+		await ctx.audit.log(`confirmation: ${stringify(confirmation)}`);
 	} else {
 		const {
 			groups: { ipAddress },
@@ -62,7 +62,7 @@ export const handler: CommandHandler = async ctx => {
 				{ users: [], channels: channel },
 				msgOptions,
 			);
-			await ctx.audit.log(`response: ${JSON.stringify(response)}`);
+			await ctx.audit.log(`response: ${stringify(response)}`);
 			reason = "Prompted for access permission";
 		}
 	}
