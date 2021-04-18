@@ -9,6 +9,7 @@ import {
 	HeaderBlock,
 	SectionBlock,
 	SlackMessage,
+	user,
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
@@ -99,6 +100,7 @@ export const handler: CommandHandler = async ctx => {
 				questionMessage(
 					ctx,
 					requestingUserId,
+					requestingUserId,
 					ipAddress,
 					new Date().toLocaleString(),
 					msgId,
@@ -120,6 +122,7 @@ export const handler: CommandHandler = async ctx => {
 function questionMessage(
 	ctx: Contextual<any, any>,
 	requestingUser: string,
+	approvingUser: string,
 	ipAddress: string,
 	requestDateTime: string,
 	msgId: number,
@@ -139,7 +142,7 @@ function questionMessage(
 				fields: [
 					{
 						type: "mrkdwn",
-						text: `*Requested by:*\n<@${requestingUser}>`,
+						text: `*Requested by:*\n${user(requestingUser)}`,
 					},
 					{
 						type: "mrkdwn",
@@ -160,6 +163,18 @@ function questionMessage(
 					},
 				],
 			} as SectionBlock,
+			{
+				type: "section",
+				fields: [
+					{
+						type: "mrkdwn",
+						text: `*Approvers:*\n${user(requestingUser)}`,
+					},
+				],
+			} as SectionBlock,
+			{
+				type: "divider",
+			},
 			{
 				type: "actions",
 				elements: [
@@ -199,9 +214,6 @@ function questionMessage(
 					),
 				],
 			} as ActionsBlock,
-			{
-				type: "divider",
-			},
 			{
 				type: "context",
 				elements: [
