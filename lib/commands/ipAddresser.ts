@@ -3,10 +3,11 @@ import * as _ from "lodash";
 import {
 	ActionsBlock,
 	Attachment,
-	bold, ButtonElement,
+	bold,
+	ButtonElement,
 	HeaderBlock,
 	SectionBlock,
-	SlackMessage
+	SlackMessage,
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
