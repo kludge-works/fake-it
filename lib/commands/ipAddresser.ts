@@ -179,7 +179,7 @@ function firewallAccessMessage(
 	requestingUser: string,
 	ipAddress: string,
 	requestDateTime: string,
-	actions?: ActionsBlock,
+	actions = {} as ActionsBlock,
 	approvalStatus = "_pending_",
 ): SlackMessage {
 	return {
