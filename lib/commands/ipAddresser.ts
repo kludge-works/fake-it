@@ -179,10 +179,10 @@ function firewallAccessMessage(
 	requestingUser: string,
 	ipAddress: string,
 	requestDateTime: string,
-	actions = {} as ActionsBlock,
+	actions?,
 	approvalStatus = "_pending_",
 ): SlackMessage {
-	return {
+	const msg = {
 		blocks: [
 			{
 				type: "header",
@@ -230,7 +230,6 @@ function firewallAccessMessage(
 			{
 				type: "divider",
 			},
-			actions,
 			{
 				type: "context",
 				elements: [
@@ -242,7 +241,15 @@ function firewallAccessMessage(
 				],
 			} as ContextBlock,
 		],
-	};
+	} as SlackMessage;
+
+	if (actions) {
+		const dividerIndex = msg.blocks.findIndex(
+			block => block.type === "divider",
+		);
+		msg.blocks.splice(dividerIndex + 1, 0, actions);
+	}
+	return msg;
 }
 
 export function footer(ctx: Contextual<any, any>): string {
