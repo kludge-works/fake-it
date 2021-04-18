@@ -3,13 +3,14 @@ import * as _ from "lodash";
 import {
 	ActionsBlock,
 	Attachment,
-	bold,
+	bold, ButtonElement,
 	HeaderBlock,
 	SectionBlock,
-	SlackMessage,
+	SlackMessage
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
+import { elementForCommand } from "@atomist/skill/lib/slack/block";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -121,26 +122,28 @@ function questionMessage(
 			{
 				type: "actions",
 				elements: [
-					{
-						type: "button",
-						text: {
-							type: "plain_text",
-							text: "Click Me",
-							emoji: true,
-						},
-						value: "click_me_123",
-						action_id: "actionId-0",
-					},
-					{
-						type: "button",
-						text: {
-							type: "plain_text",
-							text: "Click Me",
-							emoji: true,
-						},
-						value: "click_me_123",
-						action_id: "actionId-1",
-					},
+					elementForCommand(
+						{
+							type: "button",
+							text: {
+								type: "plain_text",
+								text: "Say hi!",
+							},
+						} as ButtonElement,
+						"provision",
+						{ response: "hi-1" },
+					),
+					elementForCommand(
+						{
+							type: "button",
+							text: {
+								type: "plain_text",
+								text: "Say hi!",
+							},
+						} as ButtonElement,
+						"provision",
+						{ response: "hi-123" },
+					),
 				],
 			} as ActionsBlock,
 		],
