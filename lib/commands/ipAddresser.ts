@@ -8,7 +8,8 @@ import {
 	emoji,
 	HeaderBlock,
 	SectionBlock,
-	SlackMessage, user,
+	SlackMessage,
+	user,
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
@@ -49,25 +50,31 @@ export const handler: CommandHandler = async ctx => {
 		await ctx.audit.log(`ipAddress: ${stringify(ipAddress)}`);
 		await ctx.audit.log(`messageId: ${stringify(messageId)}`);
 
+		let msg: SlackMessage;
 		if ("CONFIRMED" === confirmation) {
-			await ctx.message.respond(
-				slack.successMessage(
-					"ELB Access granted",
-					`for ${ipAddress}/32`,
-					ctx,
-				),
+			msg = slack.successMessage(
+				"ELB Access granted",
+				`for ${ipAddress}/32`,
+				ctx,
 			);
 			reason = `ELB Access granted for ${ipAddress}/32`;
 		} else {
-			await ctx.message.respond(
-				slack.errorMessage(
-					"ELB Access denied",
-					`for ${ipAddress}/32`,
-					ctx,
-				),
+			msg = slack.errorMessage(
+				"ELB Access denied",
+				`for ${ipAddress}/32`,
+				ctx,
 			);
 			reason = `ELB Access denied for ${ipAddress}/32`;
 		}
+		const msgOptions = {
+			id: messageId,
+		} as MessageOptions;
+
+		await ctx.message.send(
+			msg,
+			{ users: [], channels: channel },
+			msgOptions,
+		);
 	} else {
 		const {
 			groups: { ipAddress },
