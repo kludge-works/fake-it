@@ -134,7 +134,7 @@ function questionMessage(
 			{
 				type: "section",
 				text: {
-					type: "mrkdwn",
+					type: "plain_text",
 					text: msgBody,
 					emoji: true,
 				},
