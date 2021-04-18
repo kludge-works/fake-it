@@ -8,7 +8,7 @@ import {
 	emoji,
 	HeaderBlock,
 	SectionBlock,
-	SlackMessage,
+	SlackMessage, user,
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
@@ -89,8 +89,11 @@ export const handler: CommandHandler = async ctx => {
 				thread: parentMsg,
 			} as MessageOptions;
 
+			const msgBody = `${user(userId)} I don't know ${user(
+				userId,
+			)}, can I give them access?`;
 			const response = await ctx.message.send(
-				questionMessage(ctx, ipAddress, msgId),
+				questionMessage(ctx, msgBody, ipAddress, msgId),
 				{ users: [], channels: channel },
 				msgOptions,
 			);
@@ -107,6 +110,7 @@ export const handler: CommandHandler = async ctx => {
 
 function questionMessage(
 	ctx: Contextual<any, any>,
+	msgBody: string,
 	ipAddress: string,
 	msgId: number,
 ): SlackMessage {
@@ -124,7 +128,7 @@ function questionMessage(
 				type: "section",
 				text: {
 					type: "plain_text",
-					text: "This is a plain text section block.",
+					text: msgBody,
 					emoji: true,
 				},
 			} as SectionBlock,
