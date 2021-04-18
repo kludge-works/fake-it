@@ -97,13 +97,16 @@ export const handler: CommandHandler = async ctx => {
 			} as MessageOptions;
 
 			const response = await ctx.message.send(
-				questionMessage(
+				firewallAccessMessage(
 					ctx,
-					requestingUserId,
 					requestingUserId,
 					ipAddress,
 					new Date().toLocaleString(),
-					msgId,
+					firewallAccessMessageActionsBlock(
+						requestingUserId,
+						ipAddress,
+						msgId,
+					),
 				),
 				{ users: [], channels: channel },
 				msgOptions,
@@ -119,13 +122,58 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function questionMessage(
+function firewallAccessMessageActionsBlock(
+	requestingUser: string,
+	ipAddress: string,
+	msgId: number,
+): ActionsBlock {
+	return {
+		type: "actions",
+		elements: [
+			elementForCommand(
+				{
+					type: "button",
+					// style: "primary",
+					text: {
+						type: "plain_text",
+						text: emoji("white_check_mark"),
+						emoji: true,
+					},
+				} as ButtonElement,
+				"ipAddresser",
+				{
+					confirmation: "CONFIRMED",
+					ipAddress: ipAddress,
+					messageId: msgId,
+				},
+			),
+			elementForCommand(
+				{
+					type: "button",
+					text: {
+						type: "plain_text",
+						text: emoji("no_entry"),
+						emoji: true,
+					},
+				} as ButtonElement,
+				"ipAddresser",
+				{
+					confirmation: "DENIED",
+					ipAddress: ipAddress,
+					messageId: msgId,
+					requestingUser: requestingUser,
+				},
+			),
+		],
+	} as ActionsBlock;
+}
+
+function firewallAccessMessage(
 	ctx: Contextual<any, any>,
 	requestingUser: string,
-	approvingUser: string,
 	ipAddress: string,
 	requestDateTime: string,
-	msgId: number,
+	actions: ActionsBlock,
 ): SlackMessage {
 	return {
 		blocks: [
@@ -175,45 +223,7 @@ function questionMessage(
 			{
 				type: "divider",
 			},
-			{
-				type: "actions",
-				elements: [
-					elementForCommand(
-						{
-							type: "button",
-							// style: "primary",
-							text: {
-								type: "plain_text",
-								text: emoji("white_check_mark"),
-								emoji: true,
-							},
-						} as ButtonElement,
-						"ipAddresser",
-						{
-							confirmation: "CONFIRMED",
-							ipAddress: ipAddress,
-							messageId: msgId,
-						},
-					),
-					elementForCommand(
-						{
-							type: "button",
-							text: {
-								type: "plain_text",
-								text: emoji("no_entry"),
-								emoji: true,
-							},
-						} as ButtonElement,
-						"ipAddresser",
-						{
-							confirmation: "DENIED",
-							ipAddress: ipAddress,
-							messageId: msgId,
-							requestingUser: requestingUser,
-						},
-					),
-				],
-			} as ActionsBlock,
+			actions,
 			{
 				type: "context",
 				elements: [
