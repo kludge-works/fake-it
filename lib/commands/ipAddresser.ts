@@ -124,9 +124,11 @@ function questionMessage(
 					elementForCommand(
 						{
 							type: "button",
+							style: "primary",
 							text: {
 								type: "plain_text",
-								text: "Say hi!",
+								text: ":white_check_mark",
+								emoji: true,
 							},
 						} as ButtonElement,
 						"ipAddresser",
@@ -137,7 +139,8 @@ function questionMessage(
 							type: "button",
 							text: {
 								type: "plain_text",
-								text: "Say hi!",
+								text: ":no_entry:",
+								emoji: true,
 							},
 						} as ButtonElement,
 						"ipAddresser",
