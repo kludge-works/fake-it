@@ -1,7 +1,15 @@
 import { CommandHandler, MessageOptions, slack } from "@atomist/skill";
 import * as _ from "lodash";
-import { Action, Attachment, bold, user } from "@atomist/slack-messages";
+import {
+	ActionsBlock,
+	Attachment,
+	bold,
+	HeaderBlock,
+	SectionBlock,
+	SlackMessage,
+} from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
+import { Contextual } from "@atomist/skill/src/lib/handler";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -36,14 +44,7 @@ export const handler: CommandHandler = async ctx => {
 		);
 	} else {
 		const response = await ctx.message.send(
-			slack.questionMessage(
-				"hmm I don't know you",
-				`${user("U018XUBKWAF")} can I give ${user(
-					userId,
-				)} firewall access?`,
-				ctx,
-				addConfirmationButtons(),
-			),
+			questionMessage(ctx),
 			{ users: [], channels: channel },
 			msgOptions,
 		);
@@ -56,22 +57,93 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function addConfirmationButtons(): Partial<Attachment> {
-	return {
-		actions: [
+// function addConfirmationButtons(): Partial<Attachment> {
+// 	return {
+// 		actions: [
+// 			{
+// 				text: "yes",
+// 				name: "confirmation",
+// 				type: "button",
+// 				value: "true",
+// 				style: "primary",
+// 			} as Action,
+// 			{
+// 				text: "no",
+// 				name: "confirmation",
+// 				type: "button",
+// 				value: "false",
+// 			} as Action,
+// 		],
+// 	};
+// }
+
+function questionMessage(
+	ctx: Contextual<any, any>,
+	options: Partial<Attachment> = {},
+): SlackMessage {
+	const msg: SlackMessage = {
+		// attachments: [
+		// 	{
+		// 		author_icon: `https://images.atomist.com/rug/question.png`,
+		// 		author_name: title,
+		// 		author_link: ctx.audit.url,
+		// 		text,
+		// 		fallback: text,
+		// 		color: "#B5B5B5",
+		// 		mrkdwn_in: ["text"],
+		// 		footer: footer(ctx),
+		// 		footer_icon:
+		// 			"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
+		// 		ts: ts(),
+		// 		...options,
+		// 	},
+		// ],
+		blocks: [
 			{
-				text: "yes",
-				name: "confirmation",
-				type: "button",
-				value: "true",
-				style: "primary",
-			} as Action,
+				type: "header",
+				text: {
+					type: "plain_text",
+					text: "hmm I don't know you :thinking_face:",
+					emoji: true,
+				},
+			} as HeaderBlock,
 			{
-				text: "no",
-				name: "confirmation",
-				type: "button",
-				value: "false",
-			} as Action,
+				type: "section",
+				text: {
+					type: "plain_text",
+					text: "This is a plain text section block.",
+					emoji: true,
+				},
+			} as SectionBlock,
+			{
+				type: "divider",
+			},
+			{
+				type: "actions",
+				elements: [
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "Click Me",
+							emoji: true,
+						},
+						value: "click_me_123",
+						action_id: "actionId-0",
+					},
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "Click Me",
+							emoji: true,
+						},
+						value: "click_me_123",
+						action_id: "actionId-1",
+					},
+				],
+			} as ActionsBlock,
 		],
 	};
+	return msg;
 }
