@@ -9,7 +9,6 @@ import {
 	HeaderBlock,
 	SectionBlock,
 	SlackMessage,
-	user,
 } from "@atomist/slack-messages";
 import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
@@ -18,7 +17,7 @@ import stringify = require("json-stable-stringify");
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
-	const userId = _.get(ctx.message, "source.slack.user.id");
+	const requestingUserId = _.get(ctx.message, "source.slack.user.id");
 	const parentMsg = _.get(ctx.trigger.source, "slack.message.id");
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
 	const response = _.get(ctx.message, "request.parameters") as Array<{
@@ -29,7 +28,7 @@ export const handler: CommandHandler = async ctx => {
 	let reason: string;
 
 	await ctx.audit.log(`raw_message: ${raw_message}`);
-	await ctx.audit.log(`userId: ${userId}`);
+	await ctx.audit.log(`requestingUserId: ${requestingUserId}`);
 	await ctx.audit.log(`parentMsg: ${parentMsg}`);
 	await ctx.audit.log(`channel: ${channel}`);
 	await ctx.audit.log(`ctx.message: ${stringify(ctx.message)}`);
@@ -96,11 +95,14 @@ export const handler: CommandHandler = async ctx => {
 				// thread: parentMsg,
 			} as MessageOptions;
 
-			const msgBody = `${user(userId)} I don't know ${user(
-				userId,
-			)}, can I give them access?`;
 			const response = await ctx.message.send(
-				questionMessage(ctx, msgBody, ipAddress, msgId),
+				questionMessage(
+					ctx,
+					requestingUserId,
+					ipAddress,
+					new Date().toLocaleString(),
+					msgId,
+				),
 				{ users: [], channels: channel },
 				msgOptions,
 			);
@@ -119,6 +121,7 @@ function questionMessage(
 	ctx: Contextual<any, any>,
 	requestingUser: string,
 	ipAddress: string,
+	requestDateTime: string,
 	msgId: number,
 ): SlackMessage {
 	return {
@@ -149,7 +152,7 @@ function questionMessage(
 				fields: [
 					{
 						type: "mrkdwn",
-						text: "*When:*\nnow",
+						text: `*When:*\n${requestDateTime}`,
 					},
 					{
 						type: "mrkdwn",
