@@ -81,7 +81,7 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			name: "demoEnv",
 			displayName: "Spin up a demo machines",
 			description: "Allow users to spin up their own demo clusters",
-			pattern: /^demoEnv (.*)$/,
+			pattern: /^demoEnv(.*)$/,
 		},
 	],
 });
