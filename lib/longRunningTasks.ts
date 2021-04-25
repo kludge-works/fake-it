@@ -6,6 +6,7 @@ import {
 	StepListener,
 } from "@atomist/skill";
 import { fakeConfiguration } from "./fakeConfiguration";
+import { info } from "@atomist/skill/lib/log";
 
 export function sleepyTask(
 	stepName: string,
@@ -101,7 +102,7 @@ export async function slackUpdate<
 		): Promise<void> => {
 			finishedCount++;
 			if (result.visibility !== "hidden") {
-				await ctx.audit.log(JSON.stringify(result));
+				await info(JSON.stringify(result));
 				if (!!result && result.code !== 0) {
 					text += `Failed: ${step.name}.\n\n${result.reason}\n`;
 					await updateSlackState(

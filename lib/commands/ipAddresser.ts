@@ -15,6 +15,7 @@ import { ts } from "@atomist/skill/lib/slack";
 import { Contextual } from "@atomist/skill/src/lib/handler";
 import { elementForCommand } from "@atomist/skill/lib/slack/block";
 import stringify = require("json-stable-stringify");
+import { info } from "@atomist/skill/lib/log";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
@@ -28,14 +29,14 @@ export const handler: CommandHandler = async ctx => {
 
 	let reason: string;
 
-	await ctx.audit.log(`raw_message: ${raw_message}`);
-	await ctx.audit.log(`requestingUserId: ${requestingUserId}`);
-	await ctx.audit.log(`parentMsg: ${parentMsg}`);
-	await ctx.audit.log(`channel: ${channel}`);
-	await ctx.audit.log(`ctx.message: ${stringify(ctx.message)}`);
-	await ctx.audit.log(`ctx.parameters: ${stringify(ctx.parameters)}`);
-	await ctx.audit.log(`ctx.trigger: ${stringify(ctx.trigger)}`);
-	await ctx.audit.log(`request.parameters: ${stringify(response)}`);
+	await info(`raw_message: ${raw_message}`);
+	await info(`requestingUserId: ${requestingUserId}`);
+	await info(`parentMsg: ${parentMsg}`);
+	await info(`channel: ${channel}`);
+	await info(`ctx.message: ${stringify(ctx.message)}`);
+	await info(`ctx.parameters: ${stringify(ctx.parameters)}`);
+	await info(`ctx.trigger: ${stringify(ctx.trigger)}`);
+	await info(`request.parameters: ${stringify(response)}`);
 
 	if (response.length) {
 		const confirmation = response.find(
@@ -46,9 +47,9 @@ export const handler: CommandHandler = async ctx => {
 		const messageId = response.find(param => param.name === "messageId")
 			.value;
 
-		await ctx.audit.log(`confirmation: ${stringify(confirmation)}`);
-		await ctx.audit.log(`ipAddress: ${stringify(ipAddress)}`);
-		await ctx.audit.log(`messageId: ${stringify(messageId)}`);
+		await info(`confirmation: ${stringify(confirmation)}`);
+		await info(`ipAddress: ${stringify(ipAddress)}`);
+		await info(`messageId: ${stringify(messageId)}`);
 
 		let msg: SlackMessage;
 		if ("CONFIRMED" === confirmation) {
@@ -87,7 +88,7 @@ export const handler: CommandHandler = async ctx => {
 		} = /^allow (jenkins|nexus) access for (?<ipAddress>.*)$/.exec(
 			raw_message,
 		);
-		await ctx.audit.log(`ipAddress: ${ipAddress}`);
+		await info(`ipAddress: ${ipAddress}`);
 
 		if ("127.0.0.1" === ipAddress) {
 			await ctx.message.respond(
@@ -117,7 +118,7 @@ export const handler: CommandHandler = async ctx => {
 				{ users: [], channels: channel },
 				msgOptions,
 			);
-			await ctx.audit.log(`response: ${stringify(response)}`);
+			await info(`response: ${stringify(response)}`);
 			reason = "Prompted for access permission";
 		}
 	}

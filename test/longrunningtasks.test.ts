@@ -136,10 +136,10 @@ describe.skip("event", function () {
 		};
 
 		const ctx = createContext(payload as any, {} as any);
-		ctx.audit.log = function (msg: string) {
-			console.info(msg);
-			return Promise.resolve();
-		};
+		// info = function (msg: string) {
+		// 	console.info(msg);
+		// 	return Promise.resolve();
+		// };
 		const result: HandlerStatus = (await handler(ctx as any)) as any;
 		assert.strictEqual(result.code, 0);
 	});

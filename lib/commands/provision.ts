@@ -11,6 +11,7 @@ import {
 	elementForCommand,
 } from "@atomist/skill/lib/slack/block";
 import _ = require("lodash");
+import { info } from "@atomist/skill/lib/log";
 
 export const handler: CommandHandler = async ctx => {
 	const channel = _.get(ctx.trigger.source, "slack.channel.name");
@@ -40,7 +41,7 @@ export const handler: CommandHandler = async ctx => {
 			stateValues,
 			"value.message.message_input.value",
 		);
-		await ctx.audit.log(msgInput);
+		await info(msgInput);
 		msg = {
 			response_action: "errors",
 			errors: {
@@ -48,7 +49,7 @@ export const handler: CommandHandler = async ctx => {
 			},
 		};
 	}
-	await ctx.audit.log(JSON.stringify(msgOptions));
+	await info(JSON.stringify(msgOptions));
 	const response = await ctx.message.send(
 		msg,
 		{
@@ -57,7 +58,7 @@ export const handler: CommandHandler = async ctx => {
 		},
 		msgOptions,
 	);
-	await ctx.audit.log(JSON.stringify(response));
+	await info(JSON.stringify(response));
 };
 
 function buildModalMessage(): slack.SlackMessage {
