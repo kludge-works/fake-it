@@ -78,7 +78,7 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			pattern: /^allow (jenkins|nexus) access for (.*)$/,
 		},
 		{
-			name: "teams",
+			name: "teamsCommands",
 			displayName: "teams commands",
 			description: "test teams commands",
 			pattern: /^teams(.*)$/,
