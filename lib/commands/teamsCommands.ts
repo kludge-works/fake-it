@@ -38,6 +38,7 @@ export const handler: CommandHandler = async ctx => {
 		{ users: [], channels: channel },
 		msgOptions,
 	);
+	await info(`response: ${stringify(response)}`);
 
 	return {
 		code: 0,
