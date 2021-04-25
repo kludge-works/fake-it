@@ -5,6 +5,7 @@
     "@atomist/skill": "^0.10.0",
     "@atomist/skill-logging": "^1.0.4",
     "@atomist/slack-messages": "^1.2.2",
+    "botbuilder": "^4.13.0",
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.21",
     "timezone-names": "0.0.3"
