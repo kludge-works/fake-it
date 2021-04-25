@@ -78,6 +78,12 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			pattern: /^allow (jenkins|nexus) access for (.*)$/,
 		},
 		{
+			name: "teams",
+			displayName: "teams commands",
+			description: "test teams commands",
+			pattern: /^teams(.*)$/,
+		},
+		{
 			name: "demoEnv",
 			displayName: "Spin up a demo machines",
 			description: "Allow users to spin up their own demo clusters",
