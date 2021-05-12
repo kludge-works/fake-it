@@ -6,6 +6,7 @@ import {
 	skill,
 } from "@atomist/skill";
 import { fakeConfiguration } from "./lib/fakeConfiguration";
+import { name as show } from "./lib/commands/show";
 
 export const Skill = skill<fakeConfiguration & { schedule: any }>({
 	name: "fake-it-skill",
@@ -78,7 +79,7 @@ export const Skill = skill<fakeConfiguration & { schedule: any }>({
 			pattern: /^allow (jenkins|nexus) access for (.*)$/,
 		},
 		{
-			name: "show",
+			name: show,
 			displayName: "Show different messages",
 			description: "Show different messages",
 			pattern: /^show(.*)$/,
