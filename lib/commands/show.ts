@@ -24,9 +24,9 @@ export const handler: CommandHandler = async ctx => {
 	await info(`ctx.trigger: ${stringify(ctx.trigger)}`);
 	await info(`request.parameters: ${stringify(response)}`);
 
-	const {
-		groups: { msg },
-	} = /show\s+(?<msg>.*)$/.exec(raw_message);
+	const regexArray = /show\s+(?<msg>.*)$/.exec(raw_message);
+	const msg = regexArray?.groups.msg;
+
 	const message = pickMessage(msg, ctx);
 
 	await ctx.message.respond(message);
