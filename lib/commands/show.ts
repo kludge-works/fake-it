@@ -2,6 +2,7 @@ import { CommandContext, CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import stringify = require("json-stable-stringify");
+import { bold } from "@atomist/slack-messages";
 
 export const name = "show";
 
@@ -56,11 +57,11 @@ function pickMessage(which_msg, ctx: CommandContext<any>) {
 	} else {
 		message = slack.infoMessage(
 			"Here's some ideas",
-			`@atomist show error
-			@atomist show info
-			@atomist show question
-			@atomist show success
-			@atomist show warning`,
+			`${bold("@atomist")} show error
+			${bold("@atomist")} show info
+			${bold("@atomist")} show question
+			${bold("@atomist")} show success
+			${bold("@atomist")} show warning`,
 			ctx,
 		);
 	}
