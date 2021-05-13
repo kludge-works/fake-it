@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import stringify = require("json-stable-stringify");
 import { bold } from "@atomist/slack-messages";
+import { Contextual } from "@atomist/skill/src/lib/handler/index";
 
 export const name = "show";
 
@@ -41,19 +42,40 @@ export const handler: CommandHandler = async ctx => {
 function pickMessage(which_msg, ctx: CommandContext<any>) {
 	let message;
 	if (which_msg === "error") {
-		message = slack.errorMessage("Error title", "Error message", ctx);
+		message = slack.errorMessage("Error title", "Error message", ctx, {
+			footer: footer(ctx),
+		});
 	} else if (which_msg === "info") {
-		message = slack.infoMessage("Info title", "Info message", ctx);
+		message = slack.infoMessage("Info title", "Info message", ctx, {
+			footer: footer(ctx),
+		});
 	} else if (which_msg === "question") {
 		message = slack.questionMessage(
 			"question title",
 			"question message",
 			ctx,
+			{
+				footer: footer(ctx),
+			},
 		);
 	} else if (which_msg === "success") {
-		message = slack.successMessage("Success title", "Success message", ctx);
+		message = slack.successMessage(
+			"Success title",
+			"Success message",
+			ctx,
+			{
+				footer: footer(ctx),
+			},
+		);
 	} else if (which_msg === "warning") {
-		message = slack.warningMessage("Warning title", "Warning message", ctx);
+		message = slack.warningMessage(
+			"Warning title",
+			"Warning message",
+			ctx,
+			{
+				footer: footer(ctx),
+			},
+		);
 	} else {
 		message = slack.infoMessage(
 			"Here's some ideas",
@@ -63,7 +85,14 @@ function pickMessage(which_msg, ctx: CommandContext<any>) {
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
 			ctx,
+			{
+				footer: footer(ctx),
+			},
 		);
 	}
 	return message;
+}
+
+function footer(ctx: Contextual<any, any>): string {
+	return `${ctx.skill.namespace}/${ctx.skill.name}:${ctx.skill.version}`;
 }
