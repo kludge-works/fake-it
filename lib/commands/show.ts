@@ -26,20 +26,27 @@ export const handler: CommandHandler = async ctx => {
 	await info(`ctx.trigger: ${stringify(ctx.trigger)}`);
 	await info(`request.parameters: ${stringify(response)}`);
 
-	const regexArray = /show\s+(?<msg>.*)$/.exec(raw_message);
+	const regexArray = /show\s+(?<msg>\w+)\s*(?<args>.*)$/.exec(raw_message);
 	const msg = regexArray?.groups.msg;
+	const args = regexArray?.groups.args;
 
-	const message = pickMessage(msg, ctx);
+	await info(`groups.msg: ${msg}`);
+	await info(`groups.args: ${args}`);
 
-	await ctx.message.respond(message);
-
-	return {
-		code: 0,
-		reason: "Success",
-	};
+	if (
+		msg === undefined ||
+		["error", "info", "success", "warning"].includes(msg)
+	) {
+		const message = showSimpleMessage(msg, ctx);
+		await ctx.message.respond(message);
+		return {
+			code: 0,
+			reason: "Success",
+		};
+	}
 };
 
-function pickMessage(which_msg, ctx: CommandContext<any>) {
+function showSimpleMessage(which_msg, ctx: CommandContext<any>) {
 	let message;
 	if (which_msg === "error") {
 		message = slack.errorMessage("Error title", "Error message", ctx, {
