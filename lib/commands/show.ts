@@ -66,17 +66,7 @@ async function initialMessage(msg, ctx: CommandContext) {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
 	} else if (msg === "question") {
-		const opts = {
-			options: [
-				{ value: "ignore", description: "Ignore action" },
-				{ value: "delete", description: "Delete action" },
-			],
-		} as Options;
-		const params = await ctx.parameters.prompt<Question>({
-			owner: { required: false },
-			action: { type: opts },
-		});
-		await info(`params: ${params}`);
+		await showQuestionMessage(ctx);
 	}
 }
 
@@ -89,6 +79,7 @@ async function showResponse(
 			return `${bold(it.name)}: ${it.value}`;
 		})
 		.join("\n");
+	await info(`showResponse: ${lines}`);
 
 	await slack.successMessage("Here's what you sent in", lines, ctx, {
 		footer: footer(ctx),
@@ -138,6 +129,19 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 		);
 	}
 	return message;
+}
+
+async function showQuestionMessage(ctx: CommandContext) {
+	const opts = {
+		options: [
+			{ value: "ignore", description: "Ignore action" },
+			{ value: "delete", description: "Delete action" },
+		],
+	} as Options;
+	await ctx.parameters.prompt<Question>({
+		owner: { required: false },
+		action: { type: opts },
+	});
 }
 
 function footer(ctx: Contextual<any, any>): string {
