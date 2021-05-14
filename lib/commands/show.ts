@@ -12,36 +12,27 @@ import { bold, SlackMessage } from "@atomist/slack-messages";
 export const name = "show";
 
 export const handler: CommandHandler = async ctx => {
-	const raw_message = _.get(ctx.message, "request.raw_message");
-	const requestingUserId = _.get(ctx.message, "source.msteams.user.id");
-	const parentMsg = _.get(
-		ctx.trigger.source,
-		"msteams.message.conversation_id",
-	);
-	const channel = _.get(ctx.trigger.source, "msteams.channel.name");
-	const response = _.get(ctx.message, "request.parameters") as Array<{
-		name: string;
-		value: string;
-	}>;
+	const raw_message = getRawMessage(ctx);
+	const response = getResponse(ctx);
 
 	await info(`raw_message: ${raw_message}`);
-	await info(`requestingUserId: ${requestingUserId}`);
-	await info(`parentMsg: ${parentMsg}`);
-	await info(`channel: ${channel}`);
+	await info(`requestingUserId: ${getUserId(ctx)}`);
+	await info(`parentMsg: ${getMessageId(ctx)}`);
+	await info(`channel: ${getChannelName(ctx)}`);
 	await info(`ctx.message: ${stringify(ctx.message)}`);
 	await info(`ctx.parameters: ${stringify(ctx.parameters)}`);
 	await info(`ctx.trigger: ${stringify(ctx.trigger)}`);
 	await info(`request.parameters: ${stringify(response)}`);
 
 	const regexArray = /show\s+(?<msg>\w+)\s*(?<args>.*)$/.exec(raw_message);
-	const msg = regexArray?.groups.msg;
+	const msgType = regexArray?.groups.msg;
 	const args = regexArray?.groups.args;
 
-	await info(`groups.msg: ${msg}`);
+	await info(`groups.msg: ${msgType}`);
 	await info(`groups.args: ${args}`);
 
 	if (isInitialMessage(response)) {
-		await initialMessage(msg, ctx);
+		await initialMessage(msgType, ctx);
 	} else {
 		await showResponse(response, ctx);
 	}
@@ -51,19 +42,44 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
+function getUserId(ctx: CommandContext<any>) {
+	return _.get(ctx.message, "source.msteams.user.id");
+}
+
+function getChannelName(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.channel.name");
+}
+
+function getMessageId(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.message.conversation_id");
+}
+
+function getResponse(ctx: CommandContext) {
+	return _.get(ctx.message, "request.parameters") as Array<{
+		name: string;
+		value: string;
+	}>;
+}
+
+function getRawMessage(ctx: CommandContext) {
+	return _.get(ctx.message, "request.raw_message");
+}
+
 function isInitialMessage(response: Array<{ name: string; value: string }>) {
 	return !response.length;
 }
 
-async function initialMessage(msg, ctx: CommandContext) {
+async function initialMessage(msgType: string, ctx: CommandContext) {
 	if (
-		msg === undefined ||
-		["error", "info", "success", "warning"].includes(msg)
+		msgType === undefined ||
+		["error", "info", "success", "warning"].includes(msgType)
 	) {
-		const message = showSimpleMessage(msg, ctx);
+		const message = showSimpleMessage(msgType, ctx);
 		await ctx.message.respond(message);
-	} else if (msg === "prompt") {
+	} else if (msgType === "prompt") {
 		await showPromptMessage(ctx);
+	} else if (msgType === "replace") {
+		await showReplaceMessage(ctx);
 	}
 }
 
@@ -145,7 +161,7 @@ interface PromptParams {
 
 async function showPromptMessage(ctx: CommandContext) {
 	const response = await ctx.parameters.prompt<PromptParams>({
-		owner: { required: true, description: "The owner of something" },
+		owner: { required: false, description: "The owner or something" },
 		action: {
 			displayName: "the action",
 			type: {
@@ -158,6 +174,7 @@ async function showPromptMessage(ctx: CommandContext) {
 		a_hidden_value: {
 			displayable: false,
 			defaultValue: "a hidden default value",
+			required: false,
 		},
 		// notes: { control: "textarea", required: false },
 		// a_number: { type: "number" },
@@ -171,6 +188,14 @@ async function showPromptMessage(ctx: CommandContext) {
 	});
 
 	await info(`showPromptMessage: ${stringify(response)}`);
+}
+
+async function showReplaceMessage(ctx: CommandContext) {
+	await ctx.message.respond(
+		slack.infoMessage("badoom", "Work in progress", ctx, {
+			footer: footer(ctx),
+		}),
+	);
 }
 
 function footer(ctx: Contextual<any, any>): string {
