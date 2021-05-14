@@ -198,6 +198,7 @@ async function showReplaceMessage(ctx: CommandContext) {
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
 		}),
+		{ id: getMessageId(ctx) },
 	);
 }
 
