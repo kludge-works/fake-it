@@ -7,15 +7,8 @@ import { Contextual } from "@atomist/skill/src/lib/handler/index";
 
 export const name = "show";
 
-interface BranchAction {
+interface Question {
 	owner: string;
-	name: string;
-	branch: string;
-	apiUrl: string;
-	defaultBranch: string;
-	msgId: string;
-	cfg: string;
-	channels: string;
 	action: "ignore" | "delete" | "raise_pr";
 }
 
@@ -52,15 +45,8 @@ export const handler: CommandHandler = async ctx => {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
 	} else if (msg === "question") {
-		const params = await ctx.parameters.prompt<BranchAction>({
-			owner: {},
-			name: {},
-			branch: {},
-			msgId: {},
-			cfg: {},
-			defaultBranch: {},
-			apiUrl: {},
-			channels: {},
+		const params = await ctx.parameters.prompt<Question>({
+			owner: { required: false },
 			action: {},
 		});
 		await info(`params: ${params}`);
