@@ -1,9 +1,14 @@
-import { CommandContext, CommandHandler, slack } from "@atomist/skill";
+import {
+	CommandContext,
+	CommandHandler,
+	Contextual,
+	slack,
+} from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import stringify = require("json-stable-stringify");
 import { bold, SlackMessage } from "@atomist/slack-messages";
-import { Contextual } from "@atomist/skill/src/lib/handler/index";
+import { Options } from "@atomist/skill/lib/prompt";
 
 export const name = "show";
 
@@ -45,9 +50,12 @@ export const handler: CommandHandler = async ctx => {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
 	} else if (msg === "question") {
+		const opts = {
+			options: [{ value: "the value", description: "the description" }],
+		} as Options;
 		const params = await ctx.parameters.prompt<Question>({
 			owner: { required: false },
-			action: {},
+			action: { type: opts },
 		});
 		await info(`params: ${params}`);
 	}
