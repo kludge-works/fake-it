@@ -59,23 +59,17 @@ function showQuestionMessage(ctx: CommandContext): SlackMessage {
 			footer: footer(ctx),
 		},
 	);
-	msg.blocks = [
-		{ type: "divider" } as slack.DividerBlock,
+	msg.attachments[0].actions = [
 		{
-			type: "context",
-			elements: [
-				{
-					type: "image",
-					image_url:
-						"https://image.freepik.com/free-photo/red-drawing-pin_1156-445.jpg",
-					alt_text: "images",
-				},
-				{
-					type: "mrkdwn",
-					text: "Location: *Dogpatch*",
-				},
+			name: "action1_name",
+			value: "action1_value",
+			text: "text for action 1",
+			// confirm:
+			options: [
+				{ value: "confirm", text: "confirm" },
+				{ value: "cancel", text: "cancel" },
 			],
-		} as slack.ContextBlock,
+		} as slack.Action,
 	];
 
 	return msg;
