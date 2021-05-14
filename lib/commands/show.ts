@@ -55,7 +55,12 @@ function getChannelName(ctx: CommandContext) {
 // }
 
 function getMessageId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.conversation_id");
+	const {
+		groups: { msgId },
+	} = /.*messageid=(?<msgId>.*)$/.exec(
+		_.get(ctx.trigger.source, "msteams.conversation_id"),
+	);
+	return msgId;
 }
 
 function getResponse(ctx: CommandContext) {
@@ -84,6 +89,8 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 		await showPromptMessage(ctx);
 	} else if (msgType === "replace") {
 		await showReplaceMessage(ctx);
+	} else if (msgType === "delete") {
+		await deleteMessage(ctx);
 	}
 }
 
@@ -136,7 +143,8 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	} else {
 		message = slack.infoMessage(
 			"Here's some ideas",
-			`${bold("@atomist")} show error
+			`${bold("@atomist")} show delete
+			${bold("@atomist")} show error
 			${bold("@atomist")} show info
 			${bold("@atomist")} show prompt
 			${bold("@atomist")} show replace
@@ -226,6 +234,14 @@ async function showReplaceMessage(ctx: CommandContext) {
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
 		}),
+		{ channels: getChannelName(ctx) },
+		{ id: getMessageId(ctx) },
+	);
+}
+
+async function deleteMessage(ctx: CommandContext) {
+	await info("deleteMessage");
+	await ctx.message.delete(
 		{ channels: getChannelName(ctx) },
 		{ id: getMessageId(ctx) },
 	);
