@@ -134,10 +134,13 @@ interface PromptParams {
 	notes;
 	a_number;
 	a_boolean;
+	a_short_value;
+	a_longer_value;
+	a_pattern;
 }
 
 async function showPromptMessage(ctx: CommandContext) {
-	await ctx.parameters.prompt<PromptParams>({
+	const response = await ctx.parameters.prompt<PromptParams>({
 		owner: { required: true, description: "The owner of something" },
 		action: {
 			displayName: "the action",
@@ -154,8 +157,16 @@ async function showPromptMessage(ctx: CommandContext) {
 		},
 		notes: { control: "textarea", required: false },
 		a_number: { type: "number" },
-		a_boolean: { type: "boolean" },
+		a_boolean: { type: "boolean", description: "Must notify" },
+		a_short_value: { maxLength: 2, defaultValue: "ha" },
+		a_longer_value: { minLength: 4 },
+		a_pattern: {
+			pattern: /^(seconds|minutes|hours|days|months)$/im,
+			description: "days, minutes, hours, days, months",
+		},
 	});
+
+	await info(`showPromptMessage: ${stringify(response)}`);
 }
 
 function footer(ctx: Contextual<any, any>): string {
