@@ -7,6 +7,18 @@ import { Contextual } from "@atomist/skill/src/lib/handler/index";
 
 export const name = "show";
 
+interface BranchAction {
+	owner: string;
+	name: string;
+	branch: string;
+	apiUrl: string;
+	defaultBranch: string;
+	msgId: string;
+	cfg: string;
+	channels: string;
+	action: "ignore" | "delete" | "raise_pr";
+}
+
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
 	const requestingUserId = _.get(ctx.message, "source.slack.user.id");
@@ -40,8 +52,18 @@ export const handler: CommandHandler = async ctx => {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
 	} else if (msg === "question") {
-		const message = showQuestionMessage(ctx);
-		await ctx.message.respond(message);
+		const params = await ctx.parameters.prompt<BranchAction>({
+			owner: {},
+			name: {},
+			branch: {},
+			msgId: {},
+			cfg: {},
+			defaultBranch: {},
+			apiUrl: {},
+			channels: {},
+			action: {},
+		});
+		await info(`params: ${params}`);
 	}
 
 	return {
@@ -50,30 +72,30 @@ export const handler: CommandHandler = async ctx => {
 	};
 };
 
-function showQuestionMessage(ctx: CommandContext): SlackMessage {
-	const msg = slack.questionMessage(
-		"question title",
-		"question message",
-		ctx,
-		{
-			footer: footer(ctx),
-		},
-	);
-	msg.attachments[0].actions = [
-		{
-			name: "action1_name",
-			value: "action1_value",
-			text: "text for action 1",
-			// confirm:
-			options: [
-				{ value: "confirm", text: "confirm" },
-				{ value: "cancel", text: "cancel" },
-			],
-		} as slack.Action,
-	];
-
-	return msg;
-}
+// function showQuestionMessage(ctx: CommandContext): SlackMessage {
+// 	// const msg = slack.questionMessage(
+// 	// 	"question title",
+// 	// 	"question message",
+// 	// 	ctx,
+// 	// 	{
+// 	// 		footer: footer(ctx),
+// 	// 	},
+// 	// );
+// 	// msg.attachments[0].actions = [
+// 	// 	{
+// 	// 		name: "action1_name",
+// 	// 		value: "action1_value",
+// 	// 		text: "text for action 1",
+// 	// 		// confirm:
+// 	// 		options: [
+// 	// 			{ value: "confirm", text: "confirm" },
+// 	// 			{ value: "cancel", text: "cancel" },
+// 	// 		],
+// 	// 	} as slack.Action,
+// 	// ];
+//
+// 	return msg;
+// }
 
 function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	let message;
