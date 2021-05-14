@@ -14,7 +14,7 @@ export const name = "show";
 
 interface Question {
 	owner: string;
-	action: "ignore" | "delete" | "raise_pr";
+	action: "ignore" | "delete";
 }
 
 export const handler: CommandHandler = async ctx => {
@@ -43,6 +43,22 @@ export const handler: CommandHandler = async ctx => {
 	await info(`groups.msg: ${msg}`);
 	await info(`groups.args: ${args}`);
 
+	if (isInitialMessage(response)) {
+		await initialMessage(msg, ctx);
+	} else {
+		await showResponse(response, ctx);
+	}
+	return {
+		code: 0,
+		reason: "Success",
+	};
+};
+
+function isInitialMessage(response: Array<{ name: string; value: string }>) {
+	return !response.length;
+}
+
+async function initialMessage(msg, ctx: CommandContext) {
 	if (
 		msg === undefined ||
 		["error", "info", "success", "warning"].includes(msg)
@@ -51,7 +67,10 @@ export const handler: CommandHandler = async ctx => {
 		await ctx.message.respond(message);
 	} else if (msg === "question") {
 		const opts = {
-			options: [{ value: "the value", description: "the description" }],
+			options: [
+				{ value: "ignore", description: "Ignore action" },
+				{ value: "delete", description: "Delete action" },
+			],
 		} as Options;
 		const params = await ctx.parameters.prompt<Question>({
 			owner: { required: false },
@@ -59,37 +78,22 @@ export const handler: CommandHandler = async ctx => {
 		});
 		await info(`params: ${params}`);
 	}
+}
 
-	return {
-		code: 0,
-		reason: "Success",
-	};
-};
+async function showResponse(
+	response: Array<{ name: string; value: string }>,
+	ctx: CommandContext,
+) {
+	const lines = response
+		.map(it => {
+			return `${bold(it.name)}: ${it.value}`;
+		})
+		.join("\n");
 
-// function showQuestionMessage(ctx: CommandContext): SlackMessage {
-// 	// const msg = slack.questionMessage(
-// 	// 	"question title",
-// 	// 	"question message",
-// 	// 	ctx,
-// 	// 	{
-// 	// 		footer: footer(ctx),
-// 	// 	},
-// 	// );
-// 	// msg.attachments[0].actions = [
-// 	// 	{
-// 	// 		name: "action1_name",
-// 	// 		value: "action1_value",
-// 	// 		text: "text for action 1",
-// 	// 		// confirm:
-// 	// 		options: [
-// 	// 			{ value: "confirm", text: "confirm" },
-// 	// 			{ value: "cancel", text: "cancel" },
-// 	// 		],
-// 	// 	} as slack.Action,
-// 	// ];
-//
-// 	return msg;
-// }
+	await slack.successMessage("Here's what you sent in", lines, ctx, {
+		footer: footer(ctx),
+	});
+}
 
 function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	let message;
