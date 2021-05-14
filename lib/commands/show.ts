@@ -12,11 +12,6 @@ import { Options } from "@atomist/skill/lib/prompt";
 
 export const name = "show";
 
-interface Question {
-	owner: string;
-	action: "ignore" | "delete";
-}
-
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
 	const requestingUserId = _.get(ctx.message, "source.slack.user.id");
@@ -140,7 +135,7 @@ async function showQuestionMessage(ctx: CommandContext) {
 			{ value: "delete", description: "Delete action" },
 		],
 	} as Options;
-	await ctx.parameters.prompt<Question>({
+	await ctx.parameters.prompt({
 		owner: { required: false },
 		action: { type: opts },
 	});
