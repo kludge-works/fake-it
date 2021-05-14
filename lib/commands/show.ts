@@ -154,6 +154,7 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 interface PromptParams {
 	owner;
 	action;
+	second_action;
 	a_hidden_value;
 	notes;
 	a_number;
@@ -177,6 +178,19 @@ async function showPromptMessage(ctx: CommandContext) {
 				options: [
 					{ value: "ignore", description: "Ignore action" },
 					{ value: "delete", description: "Delete action" },
+				],
+			},
+		},
+		second_action: {
+			description: "Second action",
+			type: {
+				kind: "multiple",
+				options: [
+					{ value: "one", description: "First action" },
+					{ value: "two", description: "Second action" },
+					{ value: "three", description: "Third action" },
+					{ value: "four", description: "Fourth action" },
+					{ value: "five", description: "Fifth action" },
 				],
 			},
 		},
