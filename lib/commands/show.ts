@@ -81,9 +81,11 @@ async function showResponse(
 		.join("\n");
 	await info(`showResponse: ${lines}`);
 
-	await slack.successMessage("Here's what you sent in", lines, ctx, {
-		footer: footer(ctx),
-	});
+	await ctx.message.respond(
+		slack.successMessage("Here's what you sent in", lines, ctx, {
+			footer: footer(ctx),
+		}),
+	);
 }
 
 function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
