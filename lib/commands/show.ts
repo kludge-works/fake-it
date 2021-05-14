@@ -60,8 +60,8 @@ async function initialMessage(msg, ctx: CommandContext) {
 	) {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
-	} else if (msg === "question") {
-		await showQuestionMessage(ctx);
+	} else if (msg === "prompt") {
+		await showPromptMessage(ctx);
 	}
 }
 
@@ -116,7 +116,7 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 			"Here's some ideas",
 			`${bold("@atomist")} show error
 			${bold("@atomist")} show info
-			${bold("@atomist")} show question
+			${bold("@atomist")} show prompt
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
 			ctx,
@@ -128,16 +128,28 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	return message;
 }
 
-async function showQuestionMessage(ctx: CommandContext) {
+interface PromptParams {
+	owner;
+	action;
+	a_hidden_value;
+	notes;
+}
+
+async function showPromptMessage(ctx: CommandContext) {
 	const opts = {
 		options: [
 			{ value: "ignore", description: "Ignore action" },
 			{ value: "delete", description: "Delete action" },
 		],
 	} as Options;
-	await ctx.parameters.prompt({
-		owner: { required: false },
-		action: { type: opts },
+	await ctx.parameters.prompt<PromptParams>({
+		owner: { required: true, description: "The owner of something" },
+		action: { type: opts, displayName: "the action" },
+		a_hidden_value: {
+			displayable: false,
+			defaultValue: "a hidden default value",
+		},
+		notes: { control: "textarea", required: false },
 	});
 }
 
