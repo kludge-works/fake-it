@@ -2,7 +2,7 @@ import { CommandContext, CommandHandler, slack } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import stringify = require("json-stable-stringify");
-import { bold } from "@atomist/slack-messages";
+import { bold, SlackMessage } from "@atomist/slack-messages";
 import { Contextual } from "@atomist/skill/src/lib/handler/index";
 
 export const name = "show";
@@ -39,14 +39,47 @@ export const handler: CommandHandler = async ctx => {
 	) {
 		const message = showSimpleMessage(msg, ctx);
 		await ctx.message.respond(message);
-		return {
-			code: 0,
-			reason: "Success",
-		};
+	} else if (msg === "question") {
+		const message = showQuestionMessage(ctx);
+		await ctx.message.respond(message);
 	}
+
+	return {
+		code: 0,
+		reason: "Success",
+	};
 };
 
-function showSimpleMessage(which_msg, ctx: CommandContext<any>) {
+function showQuestionMessage(ctx: CommandContext): SlackMessage {
+	const msg = slack.questionMessage(
+		"question title",
+		"question message",
+		ctx,
+		{
+			footer: footer(ctx),
+		},
+	);
+	msg.blocks.push({ type: "divider" } as slack.DividerBlock);
+	msg.blocks.push({
+		type: "context",
+		elements: [
+			{
+				type: "image",
+				image_url:
+					"https://image.freepik.com/free-photo/red-drawing-pin_1156-445.jpg",
+				alt_text: "images",
+			},
+			{
+				type: "mrkdwn",
+				text: "Location: *Dogpatch*",
+			},
+		],
+	} as slack.ContextBlock);
+
+	return msg;
+}
+
+function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	let message;
 	if (which_msg === "error") {
 		message = slack.errorMessage("Error title", "Error message", ctx, {
@@ -56,15 +89,6 @@ function showSimpleMessage(which_msg, ctx: CommandContext<any>) {
 		message = slack.infoMessage("Info title", "Info message", ctx, {
 			footer: footer(ctx),
 		});
-	} else if (which_msg === "question") {
-		message = slack.questionMessage(
-			"question title",
-			"question message",
-			ctx,
-			{
-				footer: footer(ctx),
-			},
-		);
 	} else if (which_msg === "success") {
 		message = slack.successMessage(
 			"Success title",
