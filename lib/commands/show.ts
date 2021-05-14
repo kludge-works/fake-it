@@ -239,7 +239,7 @@ async function showReplaceMessage(ctx: CommandContext) {
 			footer: footer(ctx),
 		}),
 		{ channels: getChannelName(ctx) },
-		{ id: getChannelId(ctx) },
+		{ post: "update_only" },
 	);
 }
 
