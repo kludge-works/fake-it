@@ -162,14 +162,14 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 interface PromptParams {
 	owner;
 	action;
-	second_action;
-	a_hidden_value;
-	notes;
-	a_number;
-	a_boolean;
-	a_short_value;
-	a_longer_value;
-	a_pattern;
+	// second_action;
+	// a_hidden_value;
+	// notes;
+	// a_number;
+	// a_boolean;
+	// a_short_value;
+	// a_longer_value;
+	// a_pattern;
 }
 
 async function showPromptMessage(ctx: CommandContext) {
@@ -189,40 +189,40 @@ async function showPromptMessage(ctx: CommandContext) {
 				],
 			},
 		},
-		second_action: {
-			description: "Second action",
-			type: {
-				kind: "multiple",
-				options: [
-					{ value: "one", description: "First action" },
-					{ value: "two", description: "Second action" },
-					{ value: "three", description: "Third action" },
-					{ value: "four", description: "Fourth action" },
-					{ value: "five", description: "Fifth action" },
-				],
-			},
-		},
-		// setting a value as `displayable: false` means that you need to set `required: false`
-		// false as well.
-		// but this value then doesn't get returned in the response
-		a_hidden_value: {
-			displayable: false,
-			defaultValue: "a hidden default value",
-			required: false,
-		},
-		notes: { control: "textarea", required: false },
-		// doesn't seem to force this value to be a number.
-		a_number: { type: "number" },
-		a_boolean: { type: "boolean", description: "Must notify" },
-		// defaultValue doesn't seem to be provided
-		// maxLength doesn't seem to be respected
-		a_short_value: { maxLength: 2, defaultValue: "ha" },
-		// minLength doesn't seem to be respected
-		a_longer_value: { minLength: 4 },
-		a_pattern: {
-			pattern: /^(seconds|minutes|hours|days|months)$/im,
-			description: "days, minutes, hours, days, months",
-		},
+		// second_action: {
+		// 	description: "Second action",
+		// 	type: {
+		// 		kind: "multiple",
+		// 		options: [
+		// 			{ value: "one", description: "First action" },
+		// 			{ value: "two", description: "Second action" },
+		// 			{ value: "three", description: "Third action" },
+		// 			{ value: "four", description: "Fourth action" },
+		// 			{ value: "five", description: "Fifth action" },
+		// 		],
+		// 	},
+		// },
+		// // setting a value as `displayable: false` means that you need to set `required: false`
+		// // false as well.
+		// // but this value then doesn't get returned in the response
+		// a_hidden_value: {
+		// 	displayable: false,
+		// 	defaultValue: "a hidden default value",
+		// 	required: false,
+		// },
+		// notes: { control: "textarea", required: false },
+		// // doesn't seem to force this value to be a number.
+		// a_number: { type: "number" },
+		// a_boolean: { type: "boolean", description: "Must notify" },
+		// // defaultValue doesn't seem to be provided
+		// // maxLength doesn't seem to be respected
+		// a_short_value: { maxLength: 2, defaultValue: "ha" },
+		// // minLength doesn't seem to be respected
+		// a_longer_value: { minLength: 4 },
+		// a_pattern: {
+		// 	pattern: /^(seconds|minutes|hours|days|months)$/im,
+		// 	description: "days, minutes, hours, days, months",
+		// },
 	});
 
 	await info(`showPromptMessage: ${stringify(response)}`);
