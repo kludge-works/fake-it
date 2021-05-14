@@ -50,9 +50,9 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
-function getChannelId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.channel.id");
-}
+// function getChannelId(ctx: CommandContext) {
+// 	return _.get(ctx.trigger.source, "msteams.channel.id");
+// }
 
 function getMessageId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.conversation_id");
@@ -207,11 +207,12 @@ async function showPromptMessage(ctx: CommandContext) {
 }
 
 async function showReplaceMessage(ctx: CommandContext) {
+	await info("send replaceMessage");
 	await ctx.message.send(
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
 		}),
-		{ channels: getChannelId(ctx) },
+		{ channels: getChannelName(ctx) },
 		{ id: getMessageId(ctx) },
 	);
 }
