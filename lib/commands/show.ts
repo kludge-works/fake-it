@@ -50,8 +50,12 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
+function getChannelId(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.channel.id");
+}
+
 function getMessageId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.message.conversation_id");
+	return _.get(ctx.trigger.source, "msteams.conversation_id");
 }
 
 function getResponse(ctx: CommandContext) {
@@ -188,7 +192,10 @@ async function showPromptMessage(ctx: CommandContext) {
 		// doesn't seem to force this value to be a number.
 		a_number: { type: "number" },
 		a_boolean: { type: "boolean", description: "Must notify" },
+		// defaultValue doesn't seem to be provided
+		// maxLength doesn't seem to be respected
 		a_short_value: { maxLength: 2, defaultValue: "ha" },
+		// minLength doesn't seem to be respected
 		a_longer_value: { minLength: 4 },
 		a_pattern: {
 			pattern: /^(seconds|minutes|hours|days|months)$/im,
@@ -200,10 +207,11 @@ async function showPromptMessage(ctx: CommandContext) {
 }
 
 async function showReplaceMessage(ctx: CommandContext) {
-	await ctx.message.respond(
+	await ctx.message.send(
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
 		}),
+		{ channels: getChannelId(ctx) },
 		{ id: getMessageId(ctx) },
 	);
 }
