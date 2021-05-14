@@ -13,9 +13,12 @@ export const name = "show";
 
 export const handler: CommandHandler = async ctx => {
 	const raw_message = _.get(ctx.message, "request.raw_message");
-	const requestingUserId = _.get(ctx.message, "source.slack.user.id");
-	const parentMsg = _.get(ctx.trigger.source, "slack.message.id");
-	const channel = _.get(ctx.trigger.source, "slack.channel.name");
+	const requestingUserId = _.get(ctx.message, "source.msteams.user.id");
+	const parentMsg = _.get(
+		ctx.trigger.source,
+		"msteams.message.conversation_id",
+	);
+	const channel = _.get(ctx.trigger.source, "msteams.channel.name");
 	const response = _.get(ctx.message, "request.parameters") as Array<{
 		name: string;
 		value: string;
@@ -116,6 +119,7 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 			`${bold("@atomist")} show error
 			${bold("@atomist")} show info
 			${bold("@atomist")} show prompt
+			${bold("@atomist")} show replace
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
 			ctx,
@@ -130,7 +134,7 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 interface PromptParams {
 	owner;
 	action;
-	// a_hidden_value;
+	a_hidden_value;
 	// notes;
 	// a_number;
 	// a_boolean;
@@ -151,10 +155,10 @@ async function showPromptMessage(ctx: CommandContext) {
 				],
 			},
 		},
-		// a_hidden_value: {
-		// 	displayable: false,
-		// 	defaultValue: "a hidden default value",
-		// },
+		a_hidden_value: {
+			displayable: false,
+			defaultValue: "a hidden default value",
+		},
 		// notes: { control: "textarea", required: false },
 		// a_number: { type: "number" },
 		// a_boolean: { type: "boolean", description: "Must notify" },
