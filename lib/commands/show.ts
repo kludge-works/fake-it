@@ -8,7 +8,6 @@ import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import stringify = require("json-stable-stringify");
 import { bold, SlackMessage } from "@atomist/slack-messages";
-import { Options } from "@atomist/skill/lib/prompt";
 
 export const name = "show";
 
@@ -133,23 +132,29 @@ interface PromptParams {
 	action;
 	a_hidden_value;
 	notes;
+	a_number;
+	a_boolean;
 }
 
 async function showPromptMessage(ctx: CommandContext) {
-	const opts = {
-		options: [
-			{ value: "ignore", description: "Ignore action" },
-			{ value: "delete", description: "Delete action" },
-		],
-	} as Options;
 	await ctx.parameters.prompt<PromptParams>({
 		owner: { required: true, description: "The owner of something" },
-		action: { type: opts, displayName: "the action" },
+		action: {
+			displayName: "the action",
+			type: {
+				options: [
+					{ value: "ignore", description: "Ignore action" },
+					{ value: "delete", description: "Delete action" },
+				],
+			},
+		},
 		a_hidden_value: {
 			displayable: false,
 			defaultValue: "a hidden default value",
 		},
 		notes: { control: "textarea", required: false },
+		a_number: { type: "number" },
+		a_boolean: { type: "boolean" },
 	});
 }
 
