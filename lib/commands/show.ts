@@ -154,14 +154,19 @@ interface PromptParams {
 	notes;
 	a_number;
 	a_boolean;
-	// a_short_value;
-	// a_longer_value;
+	a_short_value;
+	a_longer_value;
 	a_pattern;
 }
 
 async function showPromptMessage(ctx: CommandContext) {
 	const response = await ctx.parameters.prompt<PromptParams>({
-		owner: { required: false, description: "The owner or something" },
+		// defaultValue doesn't seem to be provided
+		owner: {
+			required: false,
+			description: "The owner or something",
+			defaultValue: "Barry",
+		},
 		action: {
 			displayName: "the action",
 			type: {
@@ -180,10 +185,11 @@ async function showPromptMessage(ctx: CommandContext) {
 			required: false,
 		},
 		notes: { control: "textarea", required: false },
+		// doesn't seem to force this value to be a number.
 		a_number: { type: "number" },
 		a_boolean: { type: "boolean", description: "Must notify" },
-		// a_short_value: { maxLength: 2, defaultValue: "ha" },
-		// a_longer_value: { minLength: 4 },
+		a_short_value: { maxLength: 2, defaultValue: "ha" },
+		a_longer_value: { minLength: 4 },
 		a_pattern: {
 			pattern: /^(seconds|minutes|hours|days|months)$/im,
 			description: "days, minutes, hours, days, months",
