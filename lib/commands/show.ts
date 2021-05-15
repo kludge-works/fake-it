@@ -54,13 +54,17 @@ function getChannelId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.id");
 }
 
+// function getMessageId(ctx: CommandContext) {
+// 	const {
+// 		groups: { msgId },
+// 	} = /.*messageid=(?<msgId>.*)$/.exec(
+// 		_.get(ctx.trigger.source, "msteams.conversation_id"),
+// 	);
+// 	return msgId;
+// }
+
 function getMessageId(ctx: CommandContext) {
-	const {
-		groups: { msgId },
-	} = /.*messageid=(?<msgId>.*)$/.exec(
-		_.get(ctx.trigger.source, "msteams.conversation_id"),
-	);
-	return msgId;
+	return _.get(ctx.trigger.source, "msteams.conversation_id");
 }
 
 function getResponse(ctx: CommandContext) {
@@ -88,7 +92,7 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 	} else if (msgType === "prompt") {
 		await showPromptMessage(ctx);
 	} else if (msgType === "replace") {
-		await showReplaceMessage(ctx);
+		await replaceMessage(ctx);
 	} else if (msgType === "delete") {
 		await deleteMessage(ctx);
 	}
@@ -228,13 +232,15 @@ async function showPromptMessage(ctx: CommandContext) {
 	await info(`showPromptMessage: ${stringify(response)}`);
 }
 
-async function showReplaceMessage(ctx: CommandContext) {
+async function replaceMessage(ctx: CommandContext) {
 	await info("send replaceMessage");
 	await ctx.message.send(
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
 		}),
-		{ channels: getChannelName(ctx) },
+		{
+			// channels: getChannelName(ctx)
+		},
 		{ post: "update_only" },
 	);
 }
