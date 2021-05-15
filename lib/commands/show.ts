@@ -288,7 +288,13 @@ async function commandMessage(ctx: CommandContext) {
 				text: "text body",
 				fallback: "fallback text",
 				mrkdwn_in: ["text"],
-				actions: [buttonForCommand({ text: "button text" }, name)],
+				actions: [
+					buttonForCommand({ text: "button text" }, name, {
+						responseFrom: "command",
+						a_boolean: true,
+						a_number: 42,
+					}),
+				],
 				footer_icon:
 					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
 				ts: ts(),
