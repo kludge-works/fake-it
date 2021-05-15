@@ -131,10 +131,13 @@ async function showResponse(
 		],
 	};
 
-	await ctx.message.respond(msg, {
-		id: getMessageId(ctx),
-		ts: getMessageId(ctx),
-	});
+	await ctx.message.send(
+		msg,
+		{ channels: getChannelName(ctx) },
+		{
+			id: getMessageId(ctx),
+		},
+	);
 }
 
 async function showSimpleMessage(which_msg, ctx: CommandContext) {
