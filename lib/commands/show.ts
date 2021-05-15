@@ -60,9 +60,9 @@ function getChannelName(ctx: CommandContext) {
 // 	return _.get(ctx.trigger.source, "msteams.channel.id");
 // }
 
-// function getConversationId(ctx: CommandContext) {
-// 	return _.get(ctx.trigger.source, "msteams.conversation_id");
-// }
+function getConversationId(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.conversation_id");
+}
 
 function getMessageId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.message_id");
@@ -129,7 +129,8 @@ async function showResponse(
 	};
 
 	await ctx.message.respond(msg, {
-		id: getMessageId(ctx),
+		id: getConversationId(ctx),
+		// id: getMessageId(ctx),
 		// ts: getMessageId(ctx),
 		post: "update_only",
 	});
@@ -167,7 +168,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 		message = slack.infoMessage(
 			"Here's some ideas",
 			`${bold("@atomist")} show action
-			${bold("@atomist")} show block
+			${bold("@atomist")} show block ${italic("- slack only")}
 			${bold("@atomist")} show command
 			${bold("@atomist")} show delete ${italic("- not working")}
 			${bold("@atomist")} show error
