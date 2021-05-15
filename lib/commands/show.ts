@@ -9,6 +9,10 @@ import { info } from "@atomist/skill/lib/log";
 import { bold, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
 import { buttonForCommand, menuForCommand, ts } from "@atomist/skill/lib/slack";
+import {
+	InputBlock,
+	PlainTextElement,
+} from "@atomist/slack-messages/lib/SlackMessages";
 
 export const name = "show";
 
@@ -82,6 +86,8 @@ function isInitialMessage(response: Array<{ name: string; value: string }>) {
 async function initialMessage(msgType: string, ctx: CommandContext) {
 	if (msgType === "action") {
 		await actionMessage(ctx);
+	} else if (msgType === "block") {
+		await blockMessage(ctx);
 	} else if (msgType === "command") {
 		await commandMessage(ctx);
 	} else if (msgType === "delete") {
@@ -161,6 +167,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 		message = slack.infoMessage(
 			"Here's some ideas",
 			`${bold("@atomist")} show action
+			${bold("@atomist")} show block
 			${bold("@atomist")} show command
 			${bold("@atomist")} show delete ${italic("- not working")}
 			${bold("@atomist")} show error
@@ -284,6 +291,21 @@ async function deleteMessage(ctx: CommandContext) {
 		{ channels: getChannelName(ctx) },
 		{ id: getMessageId(ctx) },
 	);
+}
+
+async function blockMessage(ctx: CommandContext) {
+	await info("blockMessage");
+
+	const msg: SlackMessage = {
+		blocks: [
+			{
+				element: {} as PlainTextElement,
+				label: { text: "the label" },
+			} as InputBlock,
+		],
+	};
+
+	await ctx.message.send(msg, { channels: getChannelName(ctx) });
 }
 
 async function commandMessage(ctx: CommandContext) {
