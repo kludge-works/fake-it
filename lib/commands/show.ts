@@ -84,12 +84,7 @@ function isInitialMessage(response: Array<{ name: string; value: string }>) {
 }
 
 async function initialMessage(msgType: string, ctx: CommandContext) {
-	if (
-		msgType === undefined ||
-		["error", "info", "success", "warning"].includes(msgType)
-	) {
-		await showSimpleMessage(msgType, ctx);
-	} else if (msgType === "action") {
+	if (msgType === "action") {
 		await actionMessage(ctx);
 	} else if (msgType === "delete") {
 		await deleteMessage(ctx);
@@ -97,6 +92,8 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 		await promptMessage(ctx);
 	} else if (msgType === "replace") {
 		await replaceMessage(ctx);
+	} else {
+		await showSimpleMessage(msgType, ctx);
 	}
 }
 
@@ -292,13 +289,13 @@ async function actionMessage(ctx: CommandContext) {
 						text: "action 1",
 						type: "button",
 						name: "action_1",
-						style: "primary",
+						// style: "primary",
 					},
 					{
 						text: "action 2",
 						type: "button",
 						name: "action_2",
-						style: "danger",
+						// style: "danger",
 					},
 				],
 			},
