@@ -50,9 +50,9 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
-function getChannelId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.channel.id");
-}
+// function getChannelId(ctx: CommandContext) {
+// 	return _.get(ctx.trigger.source, "msteams.channel.id");
+// }
 
 // function getMessageId(ctx: CommandContext) {
 // 	const {
@@ -241,7 +241,7 @@ async function replaceMessage(ctx: CommandContext) {
 		{
 			// channels: getChannelName(ctx)
 		},
-		{ post: "update_only" },
+		{ id: getRawMessage(ctx) },
 	);
 }
 
@@ -249,7 +249,7 @@ async function deleteMessage(ctx: CommandContext) {
 	await info("deleteMessage");
 	await ctx.message.delete(
 		{ channels: getChannelName(ctx) },
-		{ id: getChannelId(ctx) },
+		{ id: getRawMessage(ctx) },
 	);
 }
 
