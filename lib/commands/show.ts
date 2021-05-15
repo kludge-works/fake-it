@@ -52,9 +52,9 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
-function getChannelId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.channel.id");
-}
+// function getChannelId(ctx: CommandContext) {
+// 	return _.get(ctx.trigger.source, "msteams.channel.id");
+// }
 
 // function getConversationId(ctx: CommandContext) {
 // 	return _.get(ctx.trigger.source, "msteams.conversation_id");
@@ -122,14 +122,11 @@ async function showResponse(
 		],
 	};
 
-	await ctx.message.send(
-		msg,
-		{ channels: getChannelId(ctx) },
-		{
-			id: getMessageId(ctx),
-			ts: getMessageId(ctx),
-		},
-	);
+	await ctx.message.respond(msg, {
+		id: getMessageId(ctx),
+		ts: getMessageId(ctx),
+		// post: "update_only"
+	});
 }
 
 async function simpleMessage(which_msg, ctx: CommandContext) {
