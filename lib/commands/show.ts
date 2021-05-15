@@ -295,6 +295,12 @@ async function actionMessage(ctx: CommandContext) {
 						type: "button",
 						name: "button_1",
 						style: "good", // not sure what these should be?
+						confirm: {
+							text: "confirmation text",
+							title: "confirmation title",
+							dismiss_text: "dismay",
+							ok_text: "dokey",
+						},
 					},
 					{
 						text: "action 2",
