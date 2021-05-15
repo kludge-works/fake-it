@@ -52,9 +52,9 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
-// function getChannelId(ctx: CommandContext) {
-// 	return _.get(ctx.trigger.source, "msteams.channel.id");
-// }
+function getChannelId(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.channel.id");
+}
 
 // function getMessageId(ctx: CommandContext) {
 // 	const {
@@ -133,7 +133,7 @@ async function showResponse(
 
 	await ctx.message.send(
 		msg,
-		{ channels: getChannelName(ctx) },
+		{ channels: getChannelId(ctx) },
 		{
 			id: getMessageId(ctx),
 		},
