@@ -280,7 +280,6 @@ async function actionMessage(ctx: CommandContext) {
 				fallback: "fallback text",
 				color: "#B5B5B5",
 				mrkdwn_in: ["text"],
-				footer: footer(ctx),
 				footer_icon:
 					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
 				ts: ts(),
@@ -289,7 +288,7 @@ async function actionMessage(ctx: CommandContext) {
 						text: "action 1",
 						type: "button",
 						name: "action_1",
-						// style: "primary",
+						style: "primary",
 					},
 					{
 						text: "action 2",
@@ -298,6 +297,7 @@ async function actionMessage(ctx: CommandContext) {
 						// style: "danger",
 					},
 				],
+				footer: footer(ctx),
 			},
 		],
 	};
