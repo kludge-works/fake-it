@@ -88,6 +88,8 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 		await actionMessage(ctx);
 	} else if (msgType === "delete") {
 		await deleteMessage(ctx);
+	} else if (msgType === "field") {
+		await fieldMessage(ctx);
 	} else if (msgType === "prompt") {
 		await promptMessage(ctx);
 	} else if (msgType === "replace") {
@@ -149,6 +151,7 @@ async function showSimpleMessage(which_msg, ctx: CommandContext) {
 			`${bold("@atomist")} show action
 			${bold("@atomist")} show delete ${italic("- not working")}
 			${bold("@atomist")} show error
+			${bold("@atomist")} show field
 			${bold("@atomist")} show info
 			${bold("@atomist")} show prompt ${italic("- not working")}
 			${bold("@atomist")} show replace ${italic("- not working")}
@@ -313,6 +316,71 @@ async function actionMessage(ctx: CommandContext) {
 						type: "select",
 						name: "select_2",
 						data_source: "users",
+					},
+					{
+						text: "action 4",
+						type: "select",
+						name: "select_3",
+						option_groups: [
+							{
+								text: "option_group_1",
+								options: [
+									{ text: "option1_1", value: "option1_1" },
+									{ text: "option1_2", value: "option1_2" },
+									{ text: "option1_3", value: "option1_3" },
+									{ text: "option1_4", value: "option1_4" },
+								],
+							},
+							{
+								text: "option_group_2",
+								options: [
+									{ text: "option2_1", value: "option2_1" },
+									{ text: "option2_2", value: "option2_2" },
+									{ text: "option2_3", value: "option2_3" },
+									{ text: "option2_4", value: "option2_4" },
+								],
+							},
+						],
+					},
+				],
+				footer: footer(ctx),
+			},
+		],
+	};
+
+	await ctx.message.send(msg, { channels: getChannelName(ctx) });
+}
+
+async function fieldMessage(ctx: CommandContext) {
+	await info("actionMessage");
+
+	const msg: SlackMessage = {
+		attachments: [
+			{
+				author_icon: `https://images.atomist.com/rug/question.png`,
+				author_name: "author name",
+				text: "text body",
+				fallback: "fallback text",
+				color: "#f50000", // doesn't seem to work?
+				mrkdwn_in: ["text"],
+				footer_icon:
+					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
+				ts: ts(),
+				fields: [
+					{
+						value: "value1",
+						short: true,
+						title: "title1",
+					},
+					{
+						value: "value2",
+						short: true,
+						title: "title2",
+					},
+					{
+						value: "value3",
+						short: false,
+						title: "title3",
 					},
 				],
 				footer: footer(ctx),
