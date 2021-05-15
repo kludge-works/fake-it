@@ -131,7 +131,10 @@ async function showResponse(
 		],
 	};
 
-	await ctx.message.respond(msg, { id: getMessageId(ctx) });
+	await ctx.message.respond(msg, {
+		id: getMessageId(ctx),
+		ts: getMessageId(ctx),
+	});
 }
 
 async function showSimpleMessage(which_msg, ctx: CommandContext) {
