@@ -65,8 +65,12 @@ function getChannelName(ctx: CommandContext) {
 // 	return msgId;
 // }
 
+// function getConversationId(ctx: CommandContext) {
+// 	return _.get(ctx.trigger.source, "msteams.conversation_id");
+// }
+
 function getMessageId(ctx: CommandContext) {
-	return _.get(ctx.trigger.source, "msteams.conversation_id");
+	return _.get(ctx.trigger.source, "msteams.message_id");
 }
 
 function getResponse(ctx: CommandContext) {
