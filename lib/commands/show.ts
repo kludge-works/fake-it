@@ -288,19 +288,24 @@ async function actionMessage(ctx: CommandContext) {
 						text: "action 1",
 						type: "button",
 						name: "button_1",
-						style: "Primary",
+						style: "good", // not sure what these should be?
 					},
 					{
 						text: "action 2",
 						type: "button",
 						name: "button_2",
-						// style: "danger",
+						style: "warning",
 					},
 					{
 						text: "action 3",
 						type: "select",
 						name: "select_1",
-						// style: "danger",
+						options: [
+							{ text: "option1", value: "option1" },
+							{ text: "option2", value: "option2" },
+							{ text: "option3", value: "option3" },
+							{ text: "option4", value: "option4" },
+						],
 					},
 				],
 				footer: footer(ctx),
