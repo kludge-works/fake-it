@@ -287,13 +287,19 @@ async function actionMessage(ctx: CommandContext) {
 					{
 						text: "action 1",
 						type: "button",
-						name: "action_1",
-						style: "primary",
+						name: "button_1",
+						style: "Primary",
 					},
 					{
 						text: "action 2",
 						type: "button",
-						name: "action_2",
+						name: "button_2",
+						// style: "danger",
+					},
+					{
+						text: "action 3",
+						type: "select",
+						name: "select_1",
 						// style: "danger",
 					},
 				],
