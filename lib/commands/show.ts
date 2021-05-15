@@ -124,8 +124,8 @@ async function showResponse(
 
 	await ctx.message.respond(msg, {
 		id: getMessageId(ctx),
-		ts: getMessageId(ctx),
-		// post: "update_only"
+		// ts: getMessageId(ctx),
+		post: "update_only",
 	});
 }
 
