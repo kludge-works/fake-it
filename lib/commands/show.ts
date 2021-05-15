@@ -6,7 +6,7 @@ import {
 } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
-import { bold, italic, SlackMessage } from "@atomist/slack-messages";
+import { bold, italic, listItem, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
 import { ts } from "@atomist/skill/lib/slack";
 
@@ -149,8 +149,8 @@ async function showSimpleMessage(which_msg, ctx: CommandContext) {
 	} else {
 		message = slack.infoMessage(
 			"Here's some ideas",
-			`${bold("@atomist")} show action
-			${bold("@atomist")} show delete ${italic("- not working")}
+			`${listItem(`${bold("@atomist")} show action`)}
+			${listItem(`${bold("@atomist")} show delete ${italic("- not working")}`)}
 			${bold("@atomist")} show error
 			${bold("@atomist")} show field
 			${bold("@atomist")} show info
@@ -355,13 +355,13 @@ async function actionMessage(ctx: CommandContext) {
 						text: "channels data_source",
 						type: "select",
 						name: "select_3",
-						data_source: "channels",
+						data_source: "channels", // channels don't show
 					},
 					{
 						text: "conversations data_source",
 						type: "select",
 						name: "select_4",
-						data_source: "conversations",
+						data_source: "conversations", // conversations don't show
 					},
 				],
 				footer: footer(ctx),
