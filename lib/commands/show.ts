@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import { bold, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
-import { ts } from "@atomist/skill/lib/slack";
+import { buttonForCommand, ts } from "@atomist/skill/lib/slack";
 
 export const name = "show";
 
@@ -87,6 +87,8 @@ function isInitialMessage(response: Array<{ name: string; value: string }>) {
 async function initialMessage(msgType: string, ctx: CommandContext) {
 	if (msgType === "action") {
 		await actionMessage(ctx);
+	} else if (msgType === "command") {
+		await commandMessage(ctx);
 	} else if (msgType === "delete") {
 		await deleteMessage(ctx);
 	} else if (msgType === "field") {
@@ -150,6 +152,7 @@ async function showSimpleMessage(which_msg, ctx: CommandContext) {
 		message = slack.infoMessage(
 			"Here's some ideas",
 			`${bold("@atomist")} show action
+			${bold("@atomist")} show command
 			${bold("@atomist")} show delete ${italic("- not working")}
 			${bold("@atomist")} show error
 			${bold("@atomist")} show field
@@ -272,6 +275,29 @@ async function deleteMessage(ctx: CommandContext) {
 		{ channels: getChannelName(ctx) },
 		{ id: getMessageId(ctx) },
 	);
+}
+
+async function commandMessage(ctx: CommandContext) {
+	await info("commandMessage");
+
+	const msg: SlackMessage = {
+		attachments: [
+			{
+				author_icon: `https://images.atomist.com/rug/question.png`,
+				author_name: "author name",
+				text: "text body",
+				fallback: "fallback text",
+				mrkdwn_in: ["text"],
+				actions: [buttonForCommand({ text: "button text" }, name)],
+				footer_icon:
+					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
+				ts: ts(),
+				footer: footer(ctx),
+			},
+		],
+	};
+
+	await ctx.message.send(msg, { channels: getChannelName(ctx) });
 }
 
 async function actionMessage(ctx: CommandContext) {
