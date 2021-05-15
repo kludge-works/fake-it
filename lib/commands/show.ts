@@ -312,7 +312,8 @@ async function commandMessage(ctx: CommandContext) {
 					menuForCommand(
 						{
 							text: "select option",
-							options: [{ text: "option1", value: "option2" }],
+							// options: [{ text: "option1", value: "option2" }],
+							options: "users",
 						},
 						name,
 						"my_select_static",
