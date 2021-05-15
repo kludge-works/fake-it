@@ -300,6 +300,7 @@ async function actionMessage(ctx: CommandContext) {
 						text: "action 3",
 						type: "select",
 						name: "select_1",
+						data_source: "static",
 						options: [
 							{ text: "option1", value: "option1" },
 							{ text: "option2", value: "option2" },
