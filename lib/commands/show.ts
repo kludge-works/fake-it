@@ -56,15 +56,6 @@ function getChannelId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.id");
 }
 
-// function getMessageId(ctx: CommandContext) {
-// 	const {
-// 		groups: { msgId },
-// 	} = /.*messageid=(?<msgId>.*)$/.exec(
-// 		_.get(ctx.trigger.source, "msteams.conversation_id"),
-// 	);
-// 	return msgId;
-// }
-
 // function getConversationId(ctx: CommandContext) {
 // 	return _.get(ctx.trigger.source, "msteams.conversation_id");
 // }
@@ -102,7 +93,7 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 	} else if (msgType === "replace") {
 		await replaceMessage(ctx);
 	} else {
-		await showSimpleMessage(msgType, ctx);
+		await simpleMessage(msgType, ctx);
 	}
 }
 
@@ -136,11 +127,12 @@ async function showResponse(
 		{ channels: getChannelId(ctx) },
 		{
 			id: getMessageId(ctx),
+			ts: getMessageId(ctx),
 		},
 	);
 }
 
-async function showSimpleMessage(which_msg, ctx: CommandContext) {
+async function simpleMessage(which_msg, ctx: CommandContext) {
 	let message: SlackMessage;
 	if (which_msg === "error") {
 		message = slack.errorMessage("Error title", "Error message", ctx, {
@@ -312,12 +304,6 @@ async function commandMessage(ctx: CommandContext) {
 					buttonForCommand(
 						{
 							text: "button text",
-							confirm: {
-								title: "but are you sure?",
-								text: "a dire warning",
-								dismiss_text: "nope",
-								ok_text: "yokel",
-							},
 						},
 						name,
 						{
