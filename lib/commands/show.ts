@@ -32,6 +32,7 @@ export const handler: CommandHandler = async ctx => {
 	await info(`groups.msg: ${msgType}`);
 	await info(`groups.args: ${args}`);
 
+	await info(`isInitialMessage: ${isInitialMessage(response)}`);
 	if (isInitialMessage(response)) {
 		await initialMessage(msgType, ctx);
 	} else {
@@ -186,6 +187,8 @@ interface PromptParams {
  * @param ctx
  */
 async function promptMessage(ctx: CommandContext) {
+	// <PromptParams> doesn't need to be provided in this case, may have
+	// uses in other places
 	const response = await ctx.parameters.prompt<PromptParams>({
 		// defaultValue doesn't seem to be provided
 		owner: {
@@ -300,7 +303,7 @@ async function actionMessage(ctx: CommandContext) {
 						style: "warning",
 					},
 					{
-						text: "action 3",
+						text: "static data_source",
 						type: "select",
 						name: "select_1",
 						data_source: "static",
@@ -312,13 +315,13 @@ async function actionMessage(ctx: CommandContext) {
 						],
 					},
 					{
-						text: "action 4",
+						text: "users data_source",
 						type: "select",
 						name: "select_2",
-						data_source: "users",
+						data_source: "users", // users don't show
 					},
 					{
-						text: "action 4",
+						text: "option group",
 						type: "select",
 						name: "select_3",
 						option_groups: [
@@ -341,6 +344,18 @@ async function actionMessage(ctx: CommandContext) {
 								],
 							},
 						],
+					},
+					{
+						text: "channels data_source",
+						type: "select",
+						name: "select_3",
+						data_source: "channels",
+					},
+					{
+						text: "conversations data_source",
+						type: "select",
+						name: "select_4",
+						data_source: "conversations",
 					},
 				],
 				footer: footer(ctx),
