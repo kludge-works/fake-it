@@ -299,11 +299,23 @@ async function commandMessage(ctx: CommandContext) {
 				fallback: "fallback text",
 				mrkdwn_in: ["text"],
 				actions: [
-					buttonForCommand({ text: "button text" }, name, {
-						responseFrom: "command",
-						a_boolean: true,
-						a_number: 42,
-					}),
+					buttonForCommand(
+						{
+							text: "button text",
+							confirm: {
+								title: "but are you sure?",
+								text: "a dire warning",
+								dismiss_text: "nope",
+								ok_text: "yokel",
+							},
+						},
+						name,
+						{
+							responseFrom: "command",
+							a_boolean: true,
+							a_number: 42,
+						},
+					),
 				],
 				footer_icon:
 					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
