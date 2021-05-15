@@ -308,6 +308,12 @@ async function actionMessage(ctx: CommandContext) {
 							{ text: "option4", value: "option4" },
 						],
 					},
+					{
+						text: "action 4",
+						type: "select",
+						name: "select_2",
+						data_source: "users",
+					},
 				],
 				footer: footer(ctx),
 			},
