@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import { bold, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
-import { buttonForCommand, ts } from "@atomist/skill/lib/slack";
+import { buttonForCommand, menuForCommand, ts } from "@atomist/skill/lib/slack";
 
 export const name = "show";
 
@@ -307,7 +307,20 @@ async function commandMessage(ctx: CommandContext) {
 						},
 						name,
 						{
-							responseFrom: "command",
+							responseFrom: "button",
+							a_boolean: true,
+							a_number: 42,
+						},
+					),
+					menuForCommand(
+						{
+							text: "select option",
+							options: [{ text: "option1", value: "option2" }],
+						},
+						name,
+						"my_select_static",
+						{
+							responseFrom: "static_select",
 							a_boolean: true,
 							a_number: 42,
 						},
