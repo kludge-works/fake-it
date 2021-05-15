@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
 import { bold, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
+import { ts } from "@atomist/skill/lib/slack";
 
 export const name = "show";
 
@@ -87,14 +88,15 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 		msgType === undefined ||
 		["error", "info", "success", "warning"].includes(msgType)
 	) {
-		const message = showSimpleMessage(msgType, ctx);
-		await ctx.message.respond(message);
-	} else if (msgType === "prompt") {
-		await showPromptMessage(ctx);
-	} else if (msgType === "replace") {
-		await replaceMessage(ctx);
+		await showSimpleMessage(msgType, ctx);
+	} else if (msgType === "action") {
+		await actionMessage(ctx);
 	} else if (msgType === "delete") {
 		await deleteMessage(ctx);
+	} else if (msgType === "prompt") {
+		await promptMessage(ctx);
+	} else if (msgType === "replace") {
+		await replaceMessage(ctx);
 	}
 }
 
@@ -116,7 +118,7 @@ async function showResponse(
 	);
 }
 
-function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
+async function showSimpleMessage(which_msg, ctx: CommandContext) {
 	let message;
 	if (which_msg === "error") {
 		message = slack.errorMessage("Error title", "Error message", ctx, {
@@ -147,7 +149,8 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 	} else {
 		message = slack.infoMessage(
 			"Here's some ideas",
-			`${bold("@atomist")} show delete
+			`${bold("@atomist")} show action
+			${bold("@atomist")} show delete
 			${bold("@atomist")} show error
 			${bold("@atomist")} show info
 			${bold("@atomist")} show prompt
@@ -160,7 +163,7 @@ function showSimpleMessage(which_msg, ctx: CommandContext): SlackMessage {
 			},
 		);
 	}
-	return message;
+	await ctx.message.respond(message);
 }
 
 interface PromptParams {
@@ -176,7 +179,13 @@ interface PromptParams {
 	a_pattern;
 }
 
-async function showPromptMessage(ctx: CommandContext) {
+/**
+ * This doesnt work on teams, or at least the semantics are different than slack.
+ * If validation fails the original message isn't updated but a new one is appended, this doesn't seem correct.
+ * Notes on what parameters work can be found inline.
+ * @param ctx
+ */
+async function promptMessage(ctx: CommandContext) {
 	const response = await ctx.parameters.prompt<PromptParams>({
 		// defaultValue doesn't seem to be provided
 		owner: {
@@ -232,25 +241,64 @@ async function showPromptMessage(ctx: CommandContext) {
 	await info(`showPromptMessage: ${stringify(response)}`);
 }
 
+/**
+ * This doesnt work on teams, or at least the semantics are different than slack
+ * @param ctx
+ */
 async function replaceMessage(ctx: CommandContext) {
 	await info("send replaceMessage");
 	await ctx.message.send(
 		slack.infoMessage("badoom", "Work in progress", ctx, {
 			footer: footer(ctx),
+			ts: null,
 		}),
 		{
-			// channels: getChannelName(ctx)
+			channels: getChannelName(ctx),
 		},
-		{ id: getRawMessage(ctx) },
+		{ id: getMessageId(ctx) },
 	);
 }
 
+/**
+ * This doesnt work on teams, or at least the semantics are different than slack
+ * @param ctx
+ */
 async function deleteMessage(ctx: CommandContext) {
 	await info("deleteMessage");
 	await ctx.message.delete(
 		{ channels: getChannelName(ctx) },
-		{ id: getRawMessage(ctx) },
+		{ id: getMessageId(ctx) },
 	);
+}
+
+async function actionMessage(ctx: CommandContext) {
+	await info("actionMessage");
+
+	const msg: SlackMessage = {
+		attachments: [
+			{
+				author_icon: `https://images.atomist.com/rug/question.png`,
+				author_name: "author name",
+				text: "text body",
+				fallback: "fallback text",
+				color: "#B5B5B5",
+				mrkdwn_in: ["text"],
+				footer: footer(ctx),
+				footer_icon:
+					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
+				ts: ts(),
+				actions: [
+					{
+						text: "action 1",
+						type: "button",
+						name: "action_1",
+					},
+				],
+			},
+		],
+	};
+
+	await ctx.message.send(msg, { channels: getChannelName(ctx) });
 }
 
 function footer(ctx: Contextual<any, any>): string {
