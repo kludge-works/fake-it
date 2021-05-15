@@ -113,15 +113,25 @@ async function showResponse(
 		.join("\n");
 	await info(`showResponse: ${lines}`);
 
-	await ctx.message.respond(
-		slack.successMessage("Here's what you sent in", lines, ctx, {
-			footer: footer(ctx),
-		}),
-	);
+	const msg: SlackMessage = {
+		attachments: [
+			{
+				author_icon: `https://images.atomist.com/rug/info.png`,
+				text: lines,
+				fallback: lines,
+				mrkdwn_in: ["text"],
+				footer: footer(ctx),
+				footer_icon:
+					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
+			},
+		],
+	};
+
+	await ctx.message.respond(msg, { id: getMessageId(ctx) });
 }
 
 async function showSimpleMessage(which_msg, ctx: CommandContext) {
-	let message;
+	let message: SlackMessage;
 	if (which_msg === "error") {
 		message = slack.errorMessage("Error title", "Error message", ctx, {
 			footer: footer(ctx),
