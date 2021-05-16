@@ -328,7 +328,7 @@ async function deleteMessage(ctx: CommandContext) {
 	await new Promise(resolve => setTimeout(resolve, 10000));
 	await info(`delete sent message with msgId : ${msgId}`);
 
-	await ctx.message.delete({}, { id: msgId });
+	await ctx.message.delete({ channels: getChannelName(ctx) }, { id: msgId });
 }
 
 async function blockMessage(ctx: CommandContext) {
