@@ -6,7 +6,7 @@ import {
 } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
-import { bold, emoji, italic, SlackMessage } from "@atomist/slack-messages";
+import { bold, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
 import { buttonForCommand, menuForCommand, ts } from "@atomist/skill/lib/slack";
 import {
@@ -64,7 +64,7 @@ function getConversationId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.conversation_id");
 }
 
-function createMessageId(classifier: string) {
+function createMessageId(classifier?: string) {
 	return `kl${classifier ? `-${classifier}` : ""}-${ts()}`;
 }
 
@@ -138,8 +138,6 @@ async function showResponse(
 	}
 	await ctx.message.respond(msg, {
 		id: msgId,
-		// ts: getMessageId(ctx),
-		// post: "update_only",
 	});
 }
 
@@ -334,7 +332,7 @@ async function blockMessage(ctx: CommandContext) {
 }
 
 async function commandMessage(ctx: CommandContext) {
-	const msgId = `kw-${ts()}`;
+	const msgId = createMessageId();
 	await info(`commandMessage with msgId: ${msgId}`);
 
 	const msg: SlackMessage = {
