@@ -6,7 +6,7 @@ import {
 } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
-import { bold, italic, SlackMessage } from "@atomist/slack-messages";
+import { bold, emoji, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
 import { buttonForCommand, menuForCommand, ts } from "@atomist/skill/lib/slack";
 import {
@@ -62,6 +62,10 @@ function getChannelName(ctx: CommandContext) {
 
 function getConversationId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.conversation_id");
+}
+
+function createMessageId(classifier: string) {
+	return `kl${classifier ? `-${classifier}` : ""}-${ts()}`;
 }
 
 function getMessageId(ctx: CommandContext) {
@@ -290,11 +294,28 @@ async function replaceMessage(ctx: CommandContext) {
  * @param ctx
  */
 async function deleteMessage(ctx: CommandContext) {
-	await info("deleteMessage");
-	await ctx.message.delete(
-		{ channels: getChannelName(ctx) },
-		{ id: getMessageId(ctx) },
+	const msgId = createMessageId("deleteMessage");
+	await info(`deleteMessage with msgId: ${msgId}`);
+
+	await ctx.message.send(
+		slack.infoMessage(
+			"Message will delete",
+			"Afer 10 seconds this message should disappear (bomb)",
+			ctx,
+			{
+				footer: footer(ctx),
+			},
+		),
+		{
+			channels: getChannelName(ctx),
+		},
+		{ id: msgId },
 	);
+
+	await new Promise(resolve => setTimeout(resolve, 10000));
+	await info(`deleteMessage with msgId: ${msgId}`);
+
+	await ctx.message.delete({ channels: getChannelName(ctx) }, { id: msgId });
 }
 
 async function blockMessage(ctx: CommandContext) {
