@@ -280,7 +280,7 @@ async function replaceMessage(ctx: CommandContext) {
 	const filled = "█";
 	const unfilled = "░";
 
-	for (let i = 0; i < 10; i++) {
+	for (let i = 1; i <= 10; i++) {
 		const text = `${filled.repeat(i)}${unfilled.repeat(10 - i)}`;
 		await ctx.message.send(
 			slack.infoMessage("Replace message contents", text, ctx, {
@@ -291,6 +291,7 @@ async function replaceMessage(ctx: CommandContext) {
 			},
 			{ id: msgId },
 		);
+		await new Promise(resolve => setTimeout(resolve, 1000));
 	}
 
 	await info("replaceMessage complete");
