@@ -312,7 +312,8 @@ async function deleteMessage(ctx: CommandContext) {
 					author_icon: `https://images.atomist.com/rug/info.png`,
 					author_name: "Message will delete",
 					text: "After 10 seconds this message should disappear",
-					fallback: "After 10 seconds this message should disappear (but it doesn't...)",
+					fallback:
+						"After 10 seconds this message should disappear (but it doesn't...)",
 					mrkdwn_in: ["text"],
 					footer: footer(ctx),
 					footer_icon:
