@@ -128,11 +128,12 @@ async function showResponse(
 		],
 	};
 
+	const msgId = getConversationId(ctx); // ctx.trigger.source.msteams.conversation_id
+	// const id = getMessageId(ctx), // ctx.trigger.source.msteams.message_id
 	await ctx.message.respond(msg, {
-		id: getConversationId(ctx),
-		// id: getMessageId(ctx),
+		id: msgId,
 		// ts: getMessageId(ctx),
-		post: "update_only",
+		// post: "update_only",
 	});
 }
 
@@ -310,7 +311,8 @@ async function blockMessage(ctx: CommandContext) {
 }
 
 async function commandMessage(ctx: CommandContext) {
-	await info("commandMessage");
+	const msgId = `kw-${ts()}`;
+	await info(`commandMessage with msgId: ${msgId}`);
 
 	const msg: SlackMessage = {
 		attachments: [
@@ -330,6 +332,7 @@ async function commandMessage(ctx: CommandContext) {
 							responseFrom: "button",
 							a_boolean: true,
 							a_number: 42,
+							msgId,
 						},
 					),
 					menuForCommand(
@@ -344,18 +347,22 @@ async function commandMessage(ctx: CommandContext) {
 							responseFrom: "static_select",
 							a_boolean: true,
 							a_number: 42,
+							msgId,
 						},
 					),
 				],
 				footer_icon:
 					"https://images.atomist.com/logo/atomist-black-mark-xsmall.png",
-				ts: ts(),
 				footer: footer(ctx),
 			},
 		],
 	};
 
-	await ctx.message.send(msg, { channels: getChannelName(ctx) });
+	await ctx.message.send(
+		msg,
+		{ channels: getChannelName(ctx) },
+		{ id: msgId },
+	);
 }
 
 async function actionMessage(ctx: CommandContext) {
