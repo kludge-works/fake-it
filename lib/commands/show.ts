@@ -415,6 +415,7 @@ async function commandMessage(ctx: CommandContext) {
 
 async function actionMessage(ctx: CommandContext) {
 	const callbackId = createMessageId("callback");
+	const msgId = createMessageId();
 	await info("actionMessage");
 
 	const msg: SlackMessage = {
@@ -464,7 +465,7 @@ async function actionMessage(ctx: CommandContext) {
 					{
 						text: "users data_source",
 						type: "select",
-						name: "select_2",
+						name: "user_select",
 						data_source: "users", // users don't show
 					},
 					{
@@ -510,7 +511,24 @@ async function actionMessage(ctx: CommandContext) {
 		],
 	};
 
-	await ctx.message.send(msg, { channels: getChannelName(ctx) });
+	await ctx.message.send(
+		msg,
+		{ channels: getChannelName(ctx) },
+		{
+			id: msgId,
+			actions: [
+				{
+					id: "blah-1",
+					command: name,
+					parameter_name: "blah-name",
+					parameters: [
+						{ name: "blah 1", value: "blah1" },
+						{ name: "blah 2", value: "blah2" },
+					],
+				},
+			],
+		},
+	);
 }
 
 async function fieldMessage(ctx: CommandContext) {
