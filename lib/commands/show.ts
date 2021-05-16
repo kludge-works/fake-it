@@ -414,6 +414,7 @@ async function commandMessage(ctx: CommandContext) {
 }
 
 async function actionMessage(ctx: CommandContext) {
+	const callbackId = createMessageId("callback");
 	await info("actionMessage");
 
 	const msg: SlackMessage = {
@@ -423,6 +424,7 @@ async function actionMessage(ctx: CommandContext) {
 				author_name: "author name",
 				text: "text body",
 				fallback: "fallback text",
+				callback_id: callbackId,
 				color: "#B5B5B5",
 				mrkdwn_in: ["text"],
 				footer_icon:
