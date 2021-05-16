@@ -128,8 +128,10 @@ async function showResponse(
 		],
 	};
 
-	const msgId = getConversationId(ctx); // ctx.trigger.source.msteams.conversation_id
-	// const id = getMessageId(ctx), // ctx.trigger.source.msteams.message_id
+	let msgId = response.find(it => it.name === "msgId")?.value;
+	if (msgId == undefined) {
+		msgId = getConversationId(ctx);
+	}
 	await ctx.message.respond(msg, {
 		id: msgId,
 		// ts: getMessageId(ctx),
