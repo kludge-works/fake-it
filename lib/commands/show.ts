@@ -179,7 +179,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 			${bold("@atomist")} show error
 			${bold("@atomist")} show field
 			${bold("@atomist")} show info
-			${bold("@atomist")} show prompt ${italic("- not working")}
+			${bold("@atomist")} show prompt ${italic("- not working well")}
 			${bold("@atomist")} show replace ${italic("- not working")}
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
@@ -274,17 +274,26 @@ async function promptMessage(ctx: CommandContext) {
  * @param ctx
  */
 async function replaceMessage(ctx: CommandContext) {
-	await info("send replaceMessage");
-	await ctx.message.send(
-		slack.infoMessage("badoom", "Work in progress", ctx, {
-			footer: footer(ctx),
-			ts: null,
-		}),
-		{
-			channels: getChannelName(ctx),
-		},
-		{ id: getMessageId(ctx) },
-	);
+	const msgId = createMessageId();
+	await info(`replaceMessage with msgId: ${msgId}`);
+
+	const filled = "█";
+	const unfilled = "░";
+
+	for (let i = 0; i < 10; i++) {
+		const text = `${filled.repeat(i)}${unfilled.repeat(10 - i)}`;
+		await ctx.message.send(
+			slack.infoMessage("Replace message contents", text, ctx, {
+				footer: footer(ctx),
+			}),
+			{
+				channels: getChannelName(ctx),
+			},
+			{ id: msgId },
+		);
+	}
+
+	await info("replaceMessage complete");
 }
 
 /**
