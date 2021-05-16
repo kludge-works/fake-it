@@ -56,9 +56,9 @@ function getChannelName(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.channel.name");
 }
 
-// function getChannelId(ctx: CommandContext) {
-// 	return _.get(ctx.trigger.source, "msteams.channel.id");
-// }
+function getChannelId(ctx: CommandContext) {
+	return _.get(ctx.trigger.source, "msteams.channel.id");
+}
 
 function getConversationId(ctx: CommandContext) {
 	return _.get(ctx.trigger.source, "msteams.conversation_id");
@@ -313,7 +313,7 @@ async function deleteMessage(ctx: CommandContext) {
 	await new Promise(resolve => setTimeout(resolve, 10000));
 	await info(`deleteMessage with msgId: ${msgId}`);
 
-	await ctx.message.delete({ channels: getChannelName(ctx) }, { id: msgId });
+	await ctx.message.delete({ channels: getChannelId(ctx) }, { id: msgId });
 }
 
 async function blockMessage(ctx: CommandContext) {
