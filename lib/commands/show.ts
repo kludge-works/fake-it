@@ -6,7 +6,7 @@ import {
 } from "@atomist/skill";
 import * as _ from "lodash";
 import { info } from "@atomist/skill/lib/log";
-import { bold, italic, SlackMessage } from "@atomist/slack-messages";
+import { bold, emoji, italic, SlackMessage } from "@atomist/slack-messages";
 import stringify = require("json-stable-stringify");
 import { buttonForCommand, menuForCommand, ts } from "@atomist/skill/lib/slack";
 import {
@@ -298,7 +298,7 @@ async function deleteMessage(ctx: CommandContext) {
 	await ctx.message.send(
 		slack.infoMessage(
 			"Message will delete",
-			"Afer 10 seconds this message should disappear (bomb)",
+			`After 10 seconds this message should disappear ${emoji("bomb")}`,
 			ctx,
 			{
 				footer: footer(ctx),
