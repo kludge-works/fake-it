@@ -291,7 +291,7 @@ async function replaceMessage(ctx: CommandContext) {
 			},
 			{ id: msgId },
 		);
-		await new Promise(resolve => setTimeout(resolve, 1000));
+		await new Promise(resolve => setTimeout(resolve, 3000));
 	}
 
 	await info("replaceMessage complete");
