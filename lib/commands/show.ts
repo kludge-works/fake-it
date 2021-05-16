@@ -267,7 +267,7 @@ async function promptMessage(ctx: CommandContext) {
 			},
 		},
 		{
-			thread: createMessageId("prompt"),
+			thread: true,
 		},
 	);
 
