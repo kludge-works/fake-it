@@ -180,7 +180,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 			${bold("@atomist")} show field
 			${bold("@atomist")} show info
 			${bold("@atomist")} show prompt ${italic("- not working well")}
-			${bold("@atomist")} show replace ${italic("- not working")}
+			${bold("@atomist")} show replace
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
 			ctx,
