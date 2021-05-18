@@ -274,10 +274,6 @@ async function promptMessage(ctx: CommandContext) {
 	await info(`showPromptMessage: ${stringify(response)}`);
 }
 
-/**
- * This doesnt work on teams, or at least the semantics are different than slack
- * @param ctx
- */
 async function replaceMessage(ctx: CommandContext) {
 	const msgId = createMessageId();
 	await info(`replaceMessage with msgId: ${msgId}`);
