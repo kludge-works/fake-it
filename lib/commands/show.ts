@@ -179,7 +179,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 			${bold("@atomist")} show error
 			${bold("@atomist")} show field
 			${bold("@atomist")} show info
-			${bold("@atomist")} show prompt ${italic("- not working well")}
+			${bold("@atomist")} show prompt
 			${bold("@atomist")} show replace
 			${bold("@atomist")} show success
 			${bold("@atomist")} show warning`,
@@ -206,8 +206,6 @@ interface PromptParams {
 }
 
 /**
- * This doesnt work on teams, or at least the semantics are different than slack.
- * If validation fails the original message isn't updated but a new one is appended, this doesn't seem correct.
  * Notes on what parameters work can be found inline.
  * @param ctx
  */
