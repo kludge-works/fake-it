@@ -214,7 +214,6 @@ async function promptMessage(ctx: CommandContext) {
 	// uses in other places
 	const response = await ctx.parameters.prompt<PromptParams>(
 		{
-			// defaultValue doesn't seem to be provided
 			owner: {
 				required: false,
 				description: "The owner or something",
@@ -251,13 +250,9 @@ async function promptMessage(ctx: CommandContext) {
 				required: false,
 			},
 			notes: { control: "textarea", required: false },
-			// doesn't seem to force this value to be a number.
 			a_number: { type: "number" },
 			a_boolean: { type: "boolean", description: "Must notify" },
-			// defaultValue doesn't seem to be provided
-			// maxLength doesn't seem to be respected
-			a_short_value: { maxLength: 2, defaultValue: "ha" },
-			// minLength doesn't seem to be respected
+			a_short_value: { maxLength: 2 },
 			a_longer_value: { minLength: 4 },
 			a_pattern: {
 				pattern: /^(seconds|minutes|hours|days|months)$/im,
