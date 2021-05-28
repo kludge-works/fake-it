@@ -9,7 +9,7 @@ This page details all runtime dependencies of `@kludge-works/fake-it`.
 | License                         | Count |
 | ------------------------------- | ----- |
 | [0BSD](#0bsd)                   | 4     |
-| [Apache-2.0](#apache-20)        | 37    |
+| [Apache-2.0](#apache-20)        | 36    |
 | [BSD-2-Clause](#bsd-2-clause)   | 9     |
 | [BSD-3-Clause](#bsd-3-clause)   | 22    |
 | [CC-BY-4.0](#cc-by-40)          | 1     |
@@ -18,7 +18,7 @@ This page details all runtime dependencies of `@kludge-works/fake-it`.
 | [GPL-3.0](#gpl-30)              | 1     |
 | [ISC](#isc)                     | 43    |
 | [MIT AND Zlib](#mit-and-zlib)   | 1     |
-| [MIT](#mit)                     | 588   |
+| [MIT](#mit)                     | 586   |
 | [Public Domain](#public-domain) | 1     |
 | [Python-2.0](#python-20)        | 1     |
 
@@ -74,7 +74,6 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `remedial`                            | `1.0.8`  | AJ ONeal              |                                                                                                                                  |
 | `rxjs`                                | `6.6.7`  | Ben Lesh              | [https://github.com/reactivex/rxjs](https://github.com/reactivex/rxjs)                                                           |
 | `teeny-request`                       | `7.0.1`  | fhinkel               | [https://github.com/googleapis/teeny-request](https://github.com/googleapis/teeny-request)                                       |
-| `typescript`                          | `4.2.4`  | Microsoft Corp.       | [https://github.com/Microsoft/TypeScript](https://github.com/Microsoft/TypeScript)                                               |
 | `yaml-ast-parser`                     | `0.0.43` |                       | [https://github.com/mulesoft-labs/yaml-ast-parser](https://github.com/mulesoft-labs/yaml-ast-parser)                             |
 
 #### BSD-2-Clause
@@ -427,7 +426,6 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `cross-spawn`                                        | `7.0.3`         | André Cruz                     | [https://github.com/moxystudio/node-cross-spawn](https://github.com/moxystudio/node-cross-spawn)                                                                                                     |
 | `crypto-random-string`                               | `2.0.0`         | Sindre Sorhus                  | [https://github.com/sindresorhus/crypto-random-string](https://github.com/sindresorhus/crypto-random-string)                                                                                         |
 | `d64`                                                | `1.0.0`         | Dominic Tarr                   | [https://github.com/dominictarr/d64](https://github.com/dominictarr/d64)                                                                                                                             |
-| `data-structures`                                    | `1.4.2`         | chenglou                       | [https://github.com/chenglou/data-structures](https://github.com/chenglou/data-structures)                                                                                                           |
 | `dataloader`                                         | `2.0.0`         |                                | [https://github.com/graphql/dataloader](https://github.com/graphql/dataloader)                                                                                                                       |
 | `date-and-time`                                      | `1.0.0`         | KNOWLEDGECODE                  | [https://github.com/knowledgecode/date-and-time](https://github.com/knowledgecode/date-and-time)                                                                                                     |
 | `date-fns`                                           | `1.30.1`        | Sasha Koss                     | [https://github.com/date-fns/date-fns](https://github.com/date-fns/date-fns)                                                                                                                         |
@@ -758,7 +756,6 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `sync-fetch`                                         | `0.3.0`         | Lars Willighagen               | [https://github.com/larsgw/sync-fetch](https://github.com/larsgw/sync-fetch)                                                                                                                         |
 | `through2`                                           | `4.0.2`         | Rod Vagg                       | [https://github.com/rvagg/through2](https://github.com/rvagg/through2)                                                                                                                               |
 | `through`                                            | `2.3.8`         | Dominic Tarr                   | [https://github.com/dominictarr/through](https://github.com/dominictarr/through)                                                                                                                     |
-| `timezone-names`                                     | `0.0.3`         | Sumit Chawla                   | [https://github.com/sumitchawla/timezone-names](https://github.com/sumitchawla/timezone-names)                                                                                                       |
 | `title-case`                                         | `3.0.3`         | Blake Embrey                   | [https://github.com/blakeembrey/change-case](https://github.com/blakeembrey/change-case)                                                                                                             |
 | `tmp`                                                | `0.0.33`        | KARASZI István                 | [https://github.com/raszi/node-tmp](https://github.com/raszi/node-tmp)                                                                                                                               |
 | `to-fast-properties`                                 | `2.0.0`         | Sindre Sorhus                  | [https://github.com/sindresorhus/to-fast-properties](https://github.com/sindresorhus/to-fast-properties)                                                                                             |
