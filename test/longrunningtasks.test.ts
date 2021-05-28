@@ -22,8 +22,7 @@ describe.skip("event", function () {
 						memory: 512,
 						runtime: "nodejs12",
 						timeout: 540,
-						url:
-							"gs://fake-it-workspace-storage/skills/fake-it/kludge-works/fake-it/184e15e3d09844e70cdbc8a516358d9ac0f40578.zip",
+						url: "gs://fake-it-workspace-storage/skills/fake-it/kludge-works/fake-it/184e15e3d09844e70cdbc8a516358d9ac0f40578.zip",
 					},
 				],
 				configuration: {
@@ -110,8 +109,7 @@ describe.skip("event", function () {
 					message: {
 						ts: "message.id",
 						id: "message.id",
-						url:
-							"https://X.slack.com/archives/channel.id/message.id",
+						url: "https://X.slack.com/archives/channel.id/message.id",
 					},
 				},
 			},

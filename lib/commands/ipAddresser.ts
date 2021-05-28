@@ -42,10 +42,12 @@ export const handler: CommandHandler = async ctx => {
 		const confirmation = response.find(
 			param => param.name === "confirmation",
 		).value;
-		const ipAddress = response.find(param => param.name === "ipAddress")
-			.value;
-		const messageId = response.find(param => param.name === "messageId")
-			.value;
+		const ipAddress = response.find(
+			param => param.name === "ipAddress",
+		).value;
+		const messageId = response.find(
+			param => param.name === "messageId",
+		).value;
 
 		await info(`confirmation: ${stringify(confirmation)}`);
 		await info(`ipAddress: ${stringify(ipAddress)}`);
