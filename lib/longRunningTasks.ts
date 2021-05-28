@@ -34,7 +34,7 @@ export function sleep(n) {
 
 export async function slackUpdate<
 	C extends CommandContext<fakeConfiguration>,
-	G extends fakeConfiguration = any
+	G extends fakeConfiguration = any,
 >(
 	ctx: C,
 	steps: Array<Step<any>>,
