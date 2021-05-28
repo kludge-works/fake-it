@@ -500,7 +500,7 @@ async function actionMessage(ctx: CommandContext) {
 		],
 	};
 
-	await ctx.message.send(
+	const response = await ctx.message.send(
 		msg,
 		{ channels: getChannelName(ctx) },
 		{
@@ -518,6 +518,8 @@ async function actionMessage(ctx: CommandContext) {
 			],
 		},
 	);
+
+	info(`actionMessage: ${stringify(response)}`);
 }
 
 async function fieldMessage(ctx: CommandContext) {
