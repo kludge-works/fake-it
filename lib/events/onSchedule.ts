@@ -17,6 +17,7 @@
 import { EventHandler, subscription } from "@atomist/skill";
 import { info } from "@atomist/skill/lib/log";
 
-export const handler: EventHandler<subscription.types.OnScheduleSubscription> = async ctx => {
-	await info(`Mike check ${new Date().toLocaleString()}`);
-};
+export const handler: EventHandler<subscription.types.OnScheduleSubscription> =
+	async ctx => {
+		await info(`Mike check ${new Date().toLocaleString()}`);
+	};
