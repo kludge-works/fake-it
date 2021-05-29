@@ -20,23 +20,23 @@ export const handler: CommandHandler = async ctx => {
 	const raw_message = getRawMessage(ctx);
 	const response = getResponse(ctx);
 
-	await info(`raw_message: ${raw_message}`);
-	await info(`requestingUserId: ${getUserId(ctx)}`);
-	await info(`parentMsg: ${getMessageId(ctx)}`);
-	await info(`channel: ${getChannelName(ctx)}`);
-	await info(`ctx.message: ${stringify(ctx.message)}`);
-	await info(`ctx.parameters: ${stringify(ctx.parameters)}`);
-	await info(`ctx.trigger: ${stringify(ctx.trigger)}`);
-	await info(`request.parameters: ${stringify(response)}`);
+	info(`raw_message: ${raw_message}`);
+	info(`requestingUserId: ${getUserId(ctx)}`);
+	info(`parentMsg: ${getMessageId(ctx)}`);
+	info(`channel: ${getChannelName(ctx)}`);
+	info(`ctx.message: ${stringify(ctx.message)}`);
+	info(`ctx.parameters: ${stringify(ctx.parameters)}`);
+	info(`ctx.trigger: ${stringify(ctx.trigger)}`);
+	info(`request.parameters: ${stringify(response)}`);
 
 	const regexArray = /show\s+(?<msg>\w+)\s*(?<args>.*)$/.exec(raw_message);
 	const msgType = regexArray?.groups.msg;
 	const args = regexArray?.groups.args;
 
-	await info(`groups.msg: ${msgType}`);
-	await info(`groups.args: ${args}`);
+	info(`groups.msg: ${msgType}`);
+	info(`groups.args: ${args}`);
 
-	await info(`isInitialMessage: ${isInitialMessage(response)}`);
+	info(`isInitialMessage: ${isInitialMessage(response)}`);
 	if (isInitialMessage(response)) {
 		await initialMessage(msgType, ctx);
 	} else {
@@ -102,6 +102,8 @@ async function initialMessage(msgType: string, ctx: CommandContext) {
 		await promptMessage(ctx);
 	} else if (msgType === "replace") {
 		await replaceMessage(ctx);
+	} else if (msgType === "user") {
+		await userMessage(ctx);
 	} else {
 		await simpleMessage(msgType, ctx);
 	}
@@ -116,7 +118,7 @@ async function showResponse(
 			return `${bold(it.name)}: ${it.value}`;
 		})
 		.join("\n");
-	await info(`showResponse: ${lines}`);
+	info(`showResponse: ${lines}`);
 
 	const msg: SlackMessage = {
 		attachments: [
@@ -182,6 +184,7 @@ async function simpleMessage(which_msg, ctx: CommandContext) {
 			${bold("@atomist")} show prompt
 			${bold("@atomist")} show replace
 			${bold("@atomist")} show success
+			${bold("@atomist")} show user
 			${bold("@atomist")} show warning`,
 			ctx,
 			{
@@ -264,12 +267,12 @@ async function promptMessage(ctx: CommandContext) {
 		},
 	);
 
-	await info(`showPromptMessage: ${stringify(response)}`);
+	info(`showPromptMessage: ${stringify(response)}`);
 }
 
 async function replaceMessage(ctx: CommandContext) {
 	const msgId = createMessageId();
-	await info(`replaceMessage with msgId: ${msgId}`);
+	info(`replaceMessage with msgId: ${msgId}`);
 
 	const filled = "█";
 	const unfilled = "░";
@@ -288,7 +291,7 @@ async function replaceMessage(ctx: CommandContext) {
 		await new Promise(resolve => setTimeout(resolve, 3000));
 	}
 
-	await info("replaceMessage complete");
+	info("replaceMessage complete");
 }
 
 /**
@@ -297,7 +300,7 @@ async function replaceMessage(ctx: CommandContext) {
  */
 async function deleteMessage(ctx: CommandContext) {
 	const msgId = createMessageId("deleteMessage");
-	await info(`deleteMessage with msgId: ${msgId}`);
+	info(`deleteMessage with msgId: ${msgId}`);
 
 	await ctx.message.send(
 		{
@@ -322,7 +325,7 @@ async function deleteMessage(ctx: CommandContext) {
 	);
 
 	await new Promise(resolve => setTimeout(resolve, 10000));
-	await info(`delete sent message with msgId : ${msgId}`);
+	info(`delete sent message with msgId : ${msgId}`);
 
 	await ctx.message.delete(
 		{
@@ -332,8 +335,21 @@ async function deleteMessage(ctx: CommandContext) {
 	);
 }
 
+async function userMessage(ctx: CommandContext) {
+	info("userMessage");
+	const users = getUserId(ctx);
+	info(`userId: ${users}`);
+
+	await ctx.message.send(
+		slack.infoMessage("Info title", "Message sent directly to user", ctx, {
+			footer: footer(ctx),
+		}),
+		{ users },
+	);
+}
+
 async function blockMessage(ctx: CommandContext) {
-	await info("blockMessage");
+	info("blockMessage");
 
 	const msg: SlackMessage = {
 		blocks: [
@@ -349,7 +365,7 @@ async function blockMessage(ctx: CommandContext) {
 
 async function commandMessage(ctx: CommandContext) {
 	const msgId = createMessageId();
-	await info(`commandMessage with msgId: ${msgId}`);
+	info(`commandMessage with msgId: ${msgId}`);
 
 	const msg: SlackMessage = {
 		attachments: [
@@ -405,7 +421,7 @@ async function commandMessage(ctx: CommandContext) {
 async function actionMessage(ctx: CommandContext) {
 	const callbackId = createMessageId("callback");
 	const msgId = createMessageId();
-	await info("actionMessage");
+	info("actionMessage");
 
 	const msg: SlackMessage = {
 		attachments: [
@@ -523,7 +539,7 @@ async function actionMessage(ctx: CommandContext) {
 }
 
 async function fieldMessage(ctx: CommandContext) {
-	await info("actionMessage");
+	info("actionMessage");
 
 	const msg: SlackMessage = {
 		attachments: [
