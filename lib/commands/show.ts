@@ -336,6 +336,7 @@ async function deleteMessage(ctx: CommandContext) {
 }
 
 async function userMessage(ctx: CommandContext) {
+	const msgId = createMessageId("deleteMessage");
 	info("userMessage");
 	const users = getUserId(ctx);
 	info(`userId: ${users}`);
@@ -344,7 +345,8 @@ async function userMessage(ctx: CommandContext) {
 		slack.infoMessage("Info title", "Message sent directly to user", ctx, {
 			footer: footer(ctx),
 		}),
-		{ users },
+		{ channels: msgId },
+		{ msgId },
 	);
 }
 
